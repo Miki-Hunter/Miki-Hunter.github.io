@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fly2Sun 星空画廊 — 深空天体图鉴，星云、星系、星团详情">
+    <title>星空画廊 | Fly2Sun.eu.org</title>
+    <link rel="stylesheet" href="../css/style.css?v=2">
+    <style>
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+        }
+        .g-card {
+            position: relative;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .g-card:hover {
+            border-color: var(--border-h);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 44px rgba(0,180,255,0.1);
+        }
+        .g-card .gc-visual {
+            width: 100%; height: 200px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .g-card .gc-visual::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0;
+            width: 100%; height: 50%;
+            background: linear-gradient(to top, var(--bg-panel), transparent);
+            pointer-events: none; z-index: 2;
+        }
+        .g-card .gc-visual .click-hint {
+            position: absolute; top: 14px; right: 16px;
+            font-size: 0.7rem; color: rgba(255,255,255,0.5);
+            background: rgba(0,0,0,0.45);
+            padding: 3px 10px; border-radius: 12px;
+            letter-spacing: 0.06em;
+            z-index: 2; opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .g-card:hover .gc-visual .click-hint { opacity: 1; }
+        .g-card .gc-body {
+            padding: 18px 20px 22px;
+        }
+        .g-card .gc-body h3 {
+            font-size: 1.1rem; letter-spacing: 0.06em;
+            color: #fff; margin-bottom: 4px;
+        }
+        .g-card .gc-body .cat {
+            font-size: 0.72rem; color: var(--cyan);
+            letter-spacing: 0.1em; margin-bottom: 10px;
+        }
+        .g-card .gc-body p {
+            font-size: 0.82rem; color: var(--text-dim);
+            line-height: 1.6;
+        }
+        .g-card .gc-stats {
+            display: flex; gap: 16px;
+            margin-top: 12px;
+            font-size: 0.72rem; color: var(--text-muted);
+        }
+
+        /* Nebula BGs */
+        .bg-orion     { background: radial-gradient(ellipse at 40% 40%, #3a1848, #120a20 60%, #050510); }
+        .bg-eagle     { background: radial-gradient(ellipse at 45% 35%, #1a3050, #0a1020 55%, #050510); }
+        .bg-crab      { background: radial-gradient(ellipse at 40% 40%, #4a2028, #180a10 60%, #050510); }
+        .bg-ring      { background: radial-gradient(ellipse at 45% 45%, #1a3050, #0a0a20 55%, #050510); }
+        .bg-andromeda { background: radial-gradient(ellipse at 40% 35%, #1a2a50, #0a0a20 65%, #050510); }
+        .bg-whirlpool { background: radial-gradient(ellipse at 40% 40%, #281850, #0e081e 60%, #050510); }
+        .bg-pleiades  { background: radial-gradient(ellipse at 40% 35%, #1a2a55, #0a0a25 60%, #050510); }
+        .bg-horsehead { background: radial-gradient(ellipse at 40% 45%, #2a1018, #0c0510 60%, #050510); }
+        .bg-sombrero  { background: radial-gradient(ellipse at 40% 40%, #1a2038, #0a0a18 65%, #050510); }
+        .bg-carina    { background: radial-gradient(ellipse at 45% 35%, #3a1a38, #120a1a 55%, #050510); }
+        .bg-veil      { background: radial-gradient(ellipse at 40% 40%, #1a2a40, #080a18 60%, #050510); }
+        .bg-catseye   { background: radial-gradient(ellipse at 40% 40%, #1a2a50, #080a22 55%, #050510); }
+
+        /* ===== MODAL OVERLAY ===== */
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 300;
+            background: rgba(3,3,15,0.94);
+            display: flex; align-items: flex-start; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.25s ease;
+            padding: 20px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .modal-overlay.open {
+            opacity: 1; pointer-events: auto;
+        }
+        .modal-panel {
+            background: rgba(8,18,40,0.98);
+            border: 1px solid rgba(0,220,255,0.25);
+            border-radius: 14px;
+            width: 100%; max-width: 700px;
+            margin: auto;
+            position: relative;
+        }
+        .modal-panel .m-visual {
+            width: 100%; aspect-ratio: 4/3;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 5rem;
+            border-radius: 14px 14px 0 0;
+            position: relative;
+            overflow: hidden;
+            background: #020810;
+        }
+        .modal-panel .m-visual .m-emoji {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 5rem; z-index: 0;
+        }
+        .modal-panel .m-visual img {
+            position: relative; z-index: 1;
+            width: 100%; height: 100%;
+            object-fit: contain;
+        }
+        .modal-panel .m-close {
+            position: absolute; top: 14px; right: 16px;
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff; font-size: 1.2rem;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 5;
+            transition: all 0.25s;
+        }
+        .modal-panel .m-close:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--cyan);
+        }
+        .modal-panel .m-body {
+            padding: 28px 28px 34px;
+        }
+        .modal-panel .m-body h2 {
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            letter-spacing: 0.08em; color: #fff;
+            margin-bottom: 2px;
+        }
+        .modal-panel .m-body .m-sub {
+            font-size: 0.82rem; color: var(--cyan);
+            letter-spacing: 0.08em; margin-bottom: 16px;
+        }
+        .modal-panel .m-body .m-desc {
+            font-size: 0.92rem; line-height: 1.8;
+            color: var(--text); margin-bottom: 18px;
+        }
+        .modal-panel .m-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px; margin-bottom: 20px;
+        }
+        .modal-panel .m-stats .ms {
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 7px; padding: 12px 14px;
+            text-align: center;
+        }
+        .modal-panel .m-stats .ms .msv {
+            font-size: 1.05rem; font-weight: 700;
+            color: var(--cyan); letter-spacing: 0.03em;
+        }
+        .modal-panel .m-stats .ms .msl {
+            font-size: 0.68rem; color: var(--text-dim);
+            margin-top: 3px;
+        }
+        .modal-panel .m-funfact {
+            background: rgba(0,200,255,0.04);
+            border-left: 2px solid var(--cyan);
+            padding: 16px 20px;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            font-size: 0.86rem; color: var(--text);
+            line-height: 1.7; margin-bottom: 18px;
+        }
+        .modal-panel .m-funfact strong { color: var(--cyan); }
+        .modal-panel .m-observe {
+            font-size: 0.84rem; color: var(--text-dim);
+            line-height: 1.7; margin-bottom: 16px;
+            padding: 14px 18px;
+            background: rgba(255,255,255,0.015);
+            border-radius: var(--radius-sm);
+        }
+        .modal-panel .m-observe strong { color: #fff; }
+        .modal-panel .m-links {
+            display: flex; flex-wrap: wrap; gap: 8px;
+        }
+        .modal-panel .m-links a {
+            font-size: 0.78rem; padding: 6px 14px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.12);
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: all 0.25s;
+        }
+        .modal-panel .m-links a:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            background: rgba(0,200,255,0.06);
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            .modal-overlay { padding: 0; }
+            .modal-panel {
+                border-radius: 16px;
+                max-width: calc(100% - 16px);
+                margin: 16px auto;
+            }
+            .modal-panel .m-visual { aspect-ratio: 4/3; border-radius: 16px 16px 0 0; }
+            .modal-panel .m-body { padding: 18px 14px 24px; }
+            .modal-panel .m-stats { grid-template-columns: repeat(2, 1fr); }
+            .gallery-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <div class="page-wrap">
+        <div class="container section">
+            <div class="page-title anim-fade-up">
+                <h1 data-i18n="page.gallery.title">星空画廊</h1>
+                <p class="subtitle" data-i18n="page.gallery.sub">DEEP SKY ATLAS</p>
+                <div class="hr"></div>
+                <p style="color:var(--text-dim);font-size:0.85rem;margin-top:10px;"><span lang="zh">点击卡片查看天体详情</span><span lang="en">Click any card to explore</span></p>
+            </div>
+
+            <div class="gallery-grid anim-fade-up" id="galleryGrid">
+                <!-- Cards injected by JS -->
+            </div>
+
+            <p style="text-align:center;margin-top:36px;color:var(--text-dim);font-size:0.82rem;" class="anim-fade-up">
+                <span lang="zh">真实影像请访问</span><span lang="en">For more images visit</span>
+                <a href="https://apod.nasa.gov" target="_blank" rel="noopener">NASA APOD</a> ·
+                <a href="https://hubblesite.org" target="_blank" rel="noopener">HubbleSite</a> ·
+                <a href="https://webbtelescope.org" target="_blank" rel="noopener">Webb Telescope</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-panel" id="modalPanel">
+            <button class="m-close" id="modalClose">&times;</button>
+            <div class="m-visual" id="modalVisual"></div>
+            <div class="m-body" id="modalBody"></div>
+        </div>
+    </div>
+
+
+    <div class="floating-tip" id="tooltip"></div>
+    <script src="../js/i18n.js?v=2"></script>
+    <script src="../js/components.js?v=2"></script>
+    <script src="../js/main.js?v=2"></script>
+    <script>
+    // ==================== CELESTIAL OBJECT DATA ====================
+    const objects = [
+        {
+            id: 'orion',
+            name: '猎户座大星云',
+            nameEn: 'Orion Nebula · M42 · NGC 1976',
+            type: '发射星云', typeEn: 'Emission Nebula',
+            icon: '💫', image: '../images/orion.jpg', credit: 'NASA, ESA, M. Robberto (STScI/ESA)', bg: 'bg-orion',
+            descEn: 'The closest massive star-forming region to Earth and the brightest diffuse nebula in the sky. Visible to the naked eye as a fuzzy patch in Orion\'s sword, it harbors about 700 infant stars with protoplanetary disks.', desc: '猎户座大星云是距离地球最近的恒星形成区域之一，也是全天最明亮的弥漫星云。它位于猎户座"宝剑"位置，肉眼即可见为一个模糊的光斑。哈勃空间望远镜在此拍摄了大量经典影像，揭示了正在形成的原恒星和原行星盘。星云中心有一个名为"猎户座四边形星团"的年轻疏散星团，其强烈的紫外辐射电离了周围气体，使星云发光。',
+            funFactEn: 'The Orion Nebula\'s core harbors ~700 infant stars, many with protoplanetary disks that may one day form new planetary systems.', funFact: '猎户座大星云的核心区域包含约 700 颗正在形成的恒星，其中一些带有原行星盘——未来可能诞生新的行星系统。',
+            stats: [
+                {zh:'1,344 光年', en:'1,344 ly', labelZh:'距离', labelEn:'Distance'},
+                {zh:'猎户座', en:'Orion', labelZh:'星座', labelEn:'Constellation'},
+                {zh:'+4.0', en:'+4.0', labelZh:'视星等', labelEn:'Apparent Mag.'},
+                {zh:'65×60 角分', en:'65×60 arcmin', labelZh:'视大小', labelEn:'Apparent Size'},
+                {zh:'~300,000 年', en:'~300,000 yr', labelZh:'年龄', labelEn:'Age'},
+                {zh:'约 24 光年', en:'~24 ly', labelZh:'直径', labelEn:'Diameter'},
+            ],
+            observeEn: 'Best viewed in winter (Dec–Feb in N. hemisphere). Visible to the naked eye as a fuzzy patch below Orion\'s belt. A 7×50 binocular reveals the nebula structure and Trapezium Cluster.', observe: '冬季观测最佳（北半球 12月-2月）。肉眼可见为猎户座腰帶下方三颗星中间的模糊光斑。用 7×50 双筒望远镜即可看到星云结构和四边形星团。',
+            links: [
+                ['Hubble M42 Gallery', 'https://hubblesite.org/contents/media/images/2006/01/1826-Image.html'],
+                ['ESO M42', 'https://www.eso.org/public/images/eso1103a/'],
+            ],
+        },
+        {
+            id: 'eagle',
+            name: '鹰状星云',
+            nameEn: 'Eagle Nebula · M16 · NGC 6611',
+            type: '发射星云 + 疏散星团', typeEn: 'Emission Nebula + Open Cluster',
+            icon: '🦅', image: '../images/eagle.jpg', credit: 'NASA, ESA, Hubble Heritage Team', bg: 'bg-eagle',
+            descEn: 'Home to the iconic Pillars of Creation — three towering columns of interstellar gas and dust where new stars are being born. Hubble\'s 1995 image became one of the most famous astronomical photographs in history.', desc: '鹰状星云因其形似展翅的雄鹰而得名，但更著名的是其中的"创生之柱"（Pillars of Creation）——三个巨大的星际气体和尘埃柱，内部正在孕育新的恒星。1995 年哈勃拍摄的创生之柱照片成为人类历史上最具标志性的天文影像之一。2015 年和 2022 年，哈勃与韦伯分别以更高分辨率和红外波段重新拍摄了这一经典目标。',
+            funFactEn: 'The Pillars of Creation stand 4–5 light-years tall. The middle pillar alone spans the distance from the Sun to Proxima Centauri. The entire nebula stretches over 70 light-years.', funFact: '创生之柱的高度约为 4-5 光年——仅中间那根柱子就可以从太阳延伸到比邻星（最近的恒星）。而整个鹰状星云的跨度超过 70 光年。',
+            stats: [
+                {zh:'~7,000 光年', en:'~7,000 ly', labelZh:'距离', labelEn:'Distance'},
+                {zh:'巨蛇座', en:'Serpens', labelZh:'星座', labelEn:'Constellation'},
+                {zh:'+6.0', en:'+6.0', labelZh:'视星等', labelEn:'Apparent Mag.'},
+                {zh:'70×55 光年', en:'70×55 ly', labelZh:'直径', labelEn:'Diameter'},
+                {zh:'~550 万 年', en:'~5.5 million yr', labelZh:'年龄', labelEn:'Age'},
+                {zh:'1745 年', en:'1745', labelZh:'发现年份', labelEn:'Discovered'},
+            ],
+            observeEn: 'Best in summer. Requires an 8-inch+ telescope for detail. Under very dark skies, a 4-inch scope can reveal the nebula outline.', observe: '夏季观测最佳。需要较大口径望远镜（8英寸以上）才能看到细节。在极暗的天空下，用 4 英寸望远镜可见星云轮廓。创生之柱需要大口径 + 良好视宁度才能分辨。',
+            links: [
+                ['Hubble Pillars 2015', 'https://hubblesite.org/contents/media/images/2015/01/3470-Image.html'],
+                ['Webb Pillars 2022', 'https://webbtelescope.org/contents/media/images/2022/053/01GFB4FM086001CKPDT1PBM39R'],
+            ],
+        },
+        {
+            id: 'crab',
+            name: '蟹状星云',
+            nameEn: 'Crab Nebula · M1 · NGC 1952',
+            type: '超新星遗迹', typeEn: 'Supernova Remnant',
+            icon: '🦀', image: '../images/crab.jpg', credit: 'NASA, ESA, J. Hester, A. Loll (ASU)', bg: 'bg-crab',
+            descEn: 'The expanding remnant of supernova SN 1054, meticulously recorded by Chinese astronomers as a "guest star" visible in daylight for 23 days. At its heart spins a neutron star rotating 30 times per second.', desc: '蟹状星云是公元 1054 年超新星爆发（SN 1054）的遗迹。这次爆发被中国宋代天文学家详细记录为"客星"——白天可见达 23 天，夜间可见近两年。星云中心有一颗高速旋转的中子星（脉冲星），每秒自转约 30 次，是强大的 X 射线和伽马射线源。蟹状星云是现代天文学中研究最多的天体之一。',
+            funFactEn: 'The central pulsar is only ~28–30 km across — roughly the size of a city — yet contains 1.4 solar masses. A teaspoon of its material would weigh billions of tons.', funFact: '蟹状星云中心的脉冲星直径仅约 28-30 公里（和一座城市差不多大），但质量是太阳的 1.4 倍——它的物质密度极高，一茶匙的物质重达数十亿吨。',
+            stats: [
+                {zh:'6,500 光年', en:'6,500 ly', labelZh:'距离', labelEn:'Distance'},
+                {zh:'金牛座', en:'Taurus', labelZh:'星座', labelEn:'Constellation'},
+                {zh:'+8.4', en:'+8.4', labelZh:'视星等', labelEn:'Apparent Mag.'},
+                {zh:'11×7 光年', en:'11×7 ly', labelZh:'直径', labelEn:'Diameter'},
+                {zh:'~970 年', en:'~970 yr', labelZh:'爆发至今', labelEn:'Since Explosion'},
+                {zh:'1731 年', en:'1731', labelZh:'发现年份', labelEn:'Discovered'},
+            ],
+            observeEn: 'Best in winter. A 4-inch telescope reveals an oval smudge under moderately dark skies. 16-inch+ scopes hint at filamentary structure.', observe: '冬季观测最佳。在光污染较小的环境下，用 4 英寸望远镜可见椭圆形模糊光斑。16 英寸以上望远镜可隐约看到丝状结构。脉冲星本身仅可通过 X 射线/射电望远镜探测。',
+            links: [
+                ['Chandra X-ray M1', 'https://chandra.harvard.edu/photo/2002/0052/'],
+                ['Hubble M1', 'https://hubblesite.org/contents/media/images/2005/37/1825-Image.html'],
+            ],
+        },
+        {
+            id: 'ring',
+            name: '环状星云',
+            nameEn: 'Ring Nebula · M57 · NGC 6720',
+            type: '行星状星云', typeEn: 'Planetary Nebula',
+            icon: '💍', image: '../images/ring.jpg', credit: 'NASA, ESA, CSA, JWST Ring Nebula Team', bg: 'bg-ring',
+            descEn: 'The glowing remnant of a Sun-like star\'s death. As the star exhausted its fuel, it expelled its outer layers into space, forming concentric shells illuminated by the exposed white dwarf core — a preview of our Sun\'s fate in ~5 billion years.', desc: '环状星云是类太阳恒星死亡后的遗骸——当恒星耗尽了核心的氢燃料，外层气体被抛射到太空中，形成美丽的同心壳层结构。中心残留的白矮星温度极高，发出的紫外辐射使周围气体电离发光。环状星云展示了约 50 亿年后太阳可能的最终命运。2023 年韦伯望远镜的新影像揭示了前所未有的细节。',
+            funFactEn: 'The term "planetary nebula" is a historical misnomer — they have nothing to do with planets. William Herschel thought they looked like planetary disks through his telescope.', funFact: '"行星状星云"是一个历史上的误称——它们与行星毫无关系。18 世纪的天文学家威廉·赫歇尔通过望远镜观察时，它们看起来像行星的圆面，因此得名。这个名字被沿用至今。',
+            stats: [
+                {zh:'~2,300 光年', en:'~2,300 ly', labelZh:'距离', labelEn:'Distance'},
+                {zh:'天琴座', en:'Lyra', labelZh:'星座', labelEn:'Constellation'},
+                {zh:'+8.8', en:'+8.8', labelZh:'视星等', labelEn:'Apparent Mag.'},
+                {zh:'~1.3 光年', en:'~1.3 ly', labelZh:'直径', labelEn:'Diameter'},
+                {zh:'~7,000 年', en:'~7,000 yr', labelZh:'年龄', labelEn:'Age'},
+                {zh:'1779 年', en:'1779', labelZh:'发现年份', labelEn:'Discovered'},
+            ],
+            observeEn: 'Best in summer (Lyra is a summer constellation). A 3–4 inch scope shows a distinct smoke-ring shape. 8-inch+ reveals the central white dwarf (~15th mag).', observe: '夏季观测最佳（天琴座为夏季星座）。在小型望远镜（3-4 英寸）中可见明显的烟圈形状，像一个微小的甜甜圈。用 8 英寸以上望远镜在良好视宁度下可见中心的白矮星（约 15 等）。',
+            links: [
+                ['Webb M57 2023', 'https://webbtelescope.org/contents/media/images/2023/136/01HBBXE5K4EXEFHF10Y743E92N'],
+                ['Hubble M57', 'https://hubblesite.org/contents/media/images/1999/01/762-Image.html'],
+            ],
+        },
+        {
+            id: 'andromeda',
+            name: '仙女座星系',
+            nameEn: 'Andromeda Galaxy · M31 · NGC 224',
+            type: '螺旋星系 (SA(s)b)', typeEn: 'Spiral Galaxy (SA(s)b)',
+            icon: '🌌', image: '../images/andromeda.jpg', credit: 'NASA, ESA, Hubble PHAT Team', bg: 'bg-andromeda',
+            descEn: 'The largest galaxy in the Local Group and the nearest major spiral to the Milky Way. Racing toward us at ~110 km/s, it will merge with the Milky Way in 4–5 billion years. Contains roughly one trillion stars.', desc: '仙女座星系是本星系群中最大的星系，也是距银河系最近的巨型螺旋星系。它正以约 110 km/s 的速度朝银河系靠近，预计在约 40-50 亿年后与银河系发生碰撞合并，形成一个新的椭圆星系（已有天文学家将其命名为"Milkomeda"）。仙女座星系拥有约 1 万亿颗恒星，是银河系的 2-3 倍。',
+            funFactEn: 'The farthest object visible to the naked eye at ~2.54 million light-years. Its light began traveling toward us when our ancestors Australopithecus walked Africa.', funFact: '仙女座星系是肉眼可见的最远天体（约 254 万光年）——你现在看到的光，在人类祖先南方古猿行走非洲时就已经出发了。',
+            stats: [
+                {zh:'254 万 光年', en:'2.54 million ly', labelZh:'距离', labelEn:'Distance'},
+                {zh:'仙女座', en:'Andromeda', labelZh:'星座', labelEn:'Constellation'},
+                {zh:'+3.4', en:'+3.4', labelZh:'视星等', labelEn:'Apparent Mag.'},
+                {zh:'~22 万 光年', en:'~220,000 ly', labelZh:'直径', labelEn:'Diameter'},
+                {zh:'~100 亿 年', en:'~10 billion yr', labelZh:'年龄', labelEn:'Age'},
+                {zh:'公元 964 年', en:'964 CE', labelZh:'最早记录', labelEn:'First Recorded'},
+            ],
+            observeEn: 'Best in autumn (Sep–Nov). Naked-eye visible as a fuzzy patch ~6 Full Moons wide. Binoculars reveal the bright core and extended disk. 8-inch shows dust lanes and companion galaxies M32 & M110.', observe: '秋季观测最佳（9月-11月）。肉眼在极暗天空可见为一个模糊光斑（约 6 个满月直径）。双筒望远镜中可见明亮的星系核和延展的盘面。用 8 英寸望远镜可见尘埃带和伴星系 M32、M110。',
+            links: [
+                ['Hubble M31 全景', 'https://hubblesite.org/contents/media/images/2015/02/3487-Image.html'],
+                ['NASA M31 Guide', 'https://www.nasa.gov/mission_pages/galex/pia15416.html'],
+            ],
+        },
+        {
+            id: 'whirlpool',
+            name: '涡状星系',
+            nameEn: 'Whirlpool Galaxy · M51 · NGC 5194',
+            type: '交互螺旋星系', typeEn: 'Interacting Spiral Galaxy',
+            icon: '🌀', image: '../images/whirlpool.jpg', credit: 'NASA, ESA, Hubble Heritage Team', bg: 'bg-whirlpool',
+            descEn: 'A classic grand-design spiral with strikingly well-defined arms, sculpted by gravitational interaction with its companion galaxy NGC 5195. A favorite target for amateur astrophotographers.', desc: '涡状星系是经典的大设计螺旋星系，拥有极为清晰和对称的旋臂结构。它正与较小的伴星系 NGC 5195 发生引力交互作用，这种相互作用触发了大量的恒星形成活动。M51 是业余天文摄影最热门的目标之一，也是天文学家研究螺旋结构和星系相互作用的标准样本。',
+            funFactEn: 'M51\'s spiral arms are sculpted by gravitational interaction with its companion. Simulations show the arms would be far less pronounced without this cosmic dance.', funFact: '涡状星系的旋臂结构是由与伴星系的引力交互"雕刻"出来的——计算机模拟显示，如果没有 NGC 5195 的引力扰动，M51 的旋臂将不会有如此显著的清晰度。',
+            stats: [
+                {zh:'~2,300 万 光年', en:'~23 million ly', labelZh:'距离', labelEn:'Distance'},
+                {zh:'猎犬座', en:'Canes Venatici', labelZh:'星座', labelEn:'Constellation'},
+                {zh:'+8.4', en:'+8.4', labelZh:'视星等', labelEn:'Apparent Mag.'},
+                {zh:'~6 万 光年', en:'~60,000 ly', labelZh:'直径', labelEn:'Diameter'},
+                {zh:'1773 年', en:'1773', labelZh:'发现年份', labelEn:'Discovered'},
+                {zh:'~1,000 亿', en:'~100 billion', labelZh:'恒星数量（估计）', labelEn:'Est. Star Count'},
+            ],
+            observeEn: 'Best in spring. A 4-inch scope reveals two fuzzy cores. 8-inch+ under dark skies hints at spiral structure. Astrophotography is the best way to appreciate its beauty.', observe: '春季观测最佳（猎犬座为春夏季星座）。用 4 英寸望远镜可见两个模糊核心。8 英寸以上望远镜在暗空下可分辨旋臂结构的粗略轮廓。摄影是展示其美丽的最佳方式。',
+            links: [
+                ['Hubble M51', 'https://hubblesite.org/contents/media/images/2005/12/1677-Image.html'],
+                ['Webb M51', 'https://webbtelescope.org/contents/media/images/2023/105/01H37P84CJRSTRGF5XWJQ7TN82'],
+            ],
+        },
+        {
+            id: 'pleiades',
+            name: '昴星团',
+            nameEn: 'Pleiades · M45 · 七姐妹星团',
+            type: '疏散星团 + 反射星云', typeEn: 'Open Cluster + Reflection Nebula',
+            icon: '✨', image: '../images/pleiades.jpg', credit: 'NASA, ESA, AURA/Caltech', bg: 'bg-pleiades',
+            descEn: 'The most famous open star cluster, known as the Seven Sisters across cultures worldwide. Over 1,000 stars wrapped in ethereal blue reflection nebulae. Known as Subaru in Japan and Mao in ancient China.', desc: '昴星团是最著名、最美丽的疏散星团之一。肉眼通常可见 6-7 颗亮星（视力好的可见 9-12 颗），实际星团包含超过 1,000 颗恒星。在中国文化中被称为"昴宿"或"七姐妹"，在世界各地的古代文明中都有关于它的神话。围绕亮星的蓝色反射星云最初被认为是星团形成时的残余物质，现在知道是星团正好穿过的一团星际尘埃。',
+            funFactEn: 'Known across cultures as the Seven Sisters, Subaru in Japan, and Mao in ancient China. The Subaru car logo depicts six of the brightest Pleiades stars.', funFact: '昴星团在不同文化中都有一个共同的"七"的意象——希腊神话中是阿特拉斯的七个女儿，中国称为"七姐妹"，日本称为"Subaru"（斯巴鲁汽车的标志就是昴星团的六颗亮星）。',
+            stats: [
+                {zh:'~440 光年', en:'~440 ly', labelZh:'距离', labelEn:'Distance'},
+                {zh:'金牛座', en:'Taurus', labelZh:'星座', labelEn:'Constellation'},
+                {zh:'+1.6', en:'+1.6', labelZh:'视星等', labelEn:'Apparent Mag.'},
+                {zh:'~17.5 光年', en:'~17.5 ly', labelZh:'直径', labelEn:'Diameter'},
+                {zh:'~1 亿 年', en:'~100 million yr', labelZh:'年龄', labelEn:'Age'},
+                {zh:'1,000+', en:'1,000+', labelZh:'恒星数量', labelEn:'Star Count'},
+            ],
+            observeEn: 'Best in winter (Nov–Feb). Easily found naked-eye — extend a line east from Orion\'s belt. Best viewed through 7×50 binoculars, showing dozens of stars and blue nebulosity.', observe: '冬季观测最佳（11月-2月）。肉眼即可轻松找到——从猎户座腰帶向东延伸即可看到一团密集的小星星。用 7×50 双筒望远镜是最佳观赏方式，可以看到数十颗亮星和蓝色星云。',
+            links: [
+                ['Hubble M45 反射星云', 'https://hubblesite.org/contents/media/images/2004/20/1508-Image.html'],
+                ['APOD M45', 'https://apod.nasa.gov/apod/ap121203.html'],
+            ],
+        },
+        {
+            id: 'horsehead',
+            name: '马头星云',
+            nameEn: 'Horsehead Nebula · Barnard 33',
+            type: '暗星云', typeEn: 'Dark Nebula',
+            icon: '🐴', image: '../images/horsehead.jpg', credit: 'NASA, ESA, Hubble Heritage Team', bg: 'bg-horsehead',
+            descEn: 'One of the most recognizable silhouettes in the sky — an opaque cloud of interstellar dust shaped like a chess knight, backlit by the glowing emission nebula IC 434. Part of the vast Orion Molecular Cloud Complex.', desc: '马头星云是天空中最具辨识度的暗星云之一，因其形似国际象棋中的马头而得名。它是不透光的星际尘埃，恰好位于明亮的发射星云 IC 434 前方，形成了独特的剪影效果。马头星云是猎户座分子云复合体的一部分，内部正在发生恒星形成活动。',
+            funFactEn: 'The horse\'s "head" is ~3.5 light-years across — enough to span the distance from our Sun to Proxima Centauri with room to spare.', funFact: '马头星云"头部"的大小约为 3.5 光年——仅"马头"部分就可以容纳从太阳到比邻星的整个空间，再加半个半人马座阿尔法星系。',
+            stats: [
+                {zh:'~1,500 光年', en:'~1,500 ly', labelZh:'距离', labelEn:'Distance'},
+                {zh:'猎户座', en:'Orion', labelZh:'星座', labelEn:'Constellation'},
+                {zh:'—', en:'—', labelZh:'视星等（暗星云）', labelEn:'Mag. (Dark Nebula)'},
+                {zh:'~3.5 光年', en:'~3.5 ly', labelZh:'大小', labelEn:'Size'},
+                {zh:'1888 年', en:'1888', labelZh:'发现年份', labelEn:'Discovered'},
+                {zh:'猎户座分子云', en:'Orion Molecular Cloud', labelZh:'所属结构', labelEn:'Part Of'},
+            ],
+            observeEn: 'Winter only (Dec–Feb). Not visible to the naked eye. Requires 10-inch+ telescope + H-beta filter + extremely dark skies. Astrophotography is essential.', observe: '冬季观测（12月-2月）。肉眼不可见。需要至少 10 英寸望远镜 + H-beta 滤镜 + 极暗天空才能目视观测到暗色轮廓。天文摄影是欣赏其美丽的最佳方式。',
+            links: [
+                ['Hubble Horsehead', 'https://hubblesite.org/contents/media/images/2013/12/3198-Image.html'],
+                ['ESO Horsehead', 'https://www.eso.org/public/images/eso0202a/'],
+            ],
+        },
+        {
+            id: 'sombrero',
+            name: '草帽星系',
+            nameEn: 'Sombrero Galaxy · M104 · NGC 4594',
+            type: '螺旋星系 (SA(s)a)', typeEn: 'Spiral Galaxy (SA(s)a)',
+            icon: '🎩', image: '../images/sombrero.jpg', credit: 'NASA, ESA, Hubble Heritage Team', bg: 'bg-sombrero',
+            descEn: 'Resembling a Mexican sombrero hat, this nearly edge-on galaxy features a brilliant central bulge and a prominent dark dust lane. It hosts a supermassive black hole of ~1 billion solar masses.', desc: '草帽星系因其突出的暗色尘埃带和明亮的核球，形似一顶墨西哥宽边帽而得名。从地球的视角看，它几乎是侧向的（倾角约 6°），使我们可以清晰地看到尘埃带的轮廓。草帽星系中心有一个超大质量黑洞，质量约为太阳的 10 亿倍。它是一个巨大的椭圆星系的较小复制品，兼具螺旋星系和椭圆星系的部分特征。',
+            funFactEn: 'The central supermassive black hole is one of the most massive known. Placed at the center of our Solar System, its event horizon would extend past Saturn\'s orbit.', funFact: '草帽星系中心的超大质量黑洞是已知质量最大的黑洞之一。如果把这个黑洞放在太阳系中心，它的视界将延伸到土星轨道之外。',
+            stats: [
+                {zh:'~2,800 万 光年', en:'~28 million ly', labelZh:'距离', labelEn:'Distance'},
+                {zh:'室女座', en:'Virgo', labelZh:'星座', labelEn:'Constellation'},
+                {zh:'+8.0', en:'+8.0', labelZh:'视星等', labelEn:'Apparent Mag.'},
+                {zh:'~5 万 光年', en:'~50,000 ly', labelZh:'直径', labelEn:'Diameter'},
+                {zh:'1781 年', en:'1781', labelZh:'发现年份', labelEn:'Discovered'},
+                {zh:'~10 亿 M☉', en:'~1 billion M☉', labelZh:'中心黑洞质量', labelEn:'Central Black Hole Mass'},
+            ],
+            observeEn: 'Best in spring. A 4-inch scope shows a spindle-shaped glow with a bright central bulge. 8-inch+ under dark skies reveals the dark dust lane.', observe: '春季观测最佳（室女座为春夏季星座）。用 4 英寸望远镜可见梭形光斑和中央核球。8 英寸以上望远镜在暗空下可见暗色尘埃带。',
+            links: [
+                ['Hubble M104', 'https://hubblesite.org/contents/media/images/2003/28/1434-Image.html'],
+                ['Webb M104', 'https://webbtelescope.org/contents/media/images/2024/130/01JDZQK0T8V2B2EYDBGBJWK08F'],
+            ],
+        },
+        {
+            id: 'carina',
+            name: '船底座星云',
+            nameEn: 'Carina Nebula · NGC 3372',
+            type: '发射星云', typeEn: 'Emission Nebula',
+            icon: '🌟', image: '../images/carina.jpg', credit: 'NASA, ESA, CSA, STScI', bg: 'bg-carina',
+            descEn: 'The crown jewel of the southern sky — larger and brighter than Orion but visible only from southern latitudes. Home to Eta Carinae, one of the most massive stars known, which could go supernova at any moment.', desc: '船底座星云是南天最壮观的天体之一，比猎户座大星云更大更亮，但因位于南天而不为北半球观测者熟知。星云中包含了银河系中已知质量最大、亮度最高的恒星之一——海山二（Eta Carinae），这颗恒星的质量超过太阳的 100 倍，随时可能爆发为超新星甚至极超新星。韦伯望远镜 2022 年发布的"宇宙悬崖"影像即拍摄于此。',
+            funFactEn: 'Eta Carinae briefly became the second-brightest star in the night sky in 1843. It could go supernova at any moment — tonight, or 100,000 years from now.', funFact: '海山二（Eta Carinae）在 1843 年曾短暂成为全天第二亮的恒星（仅次于天狼星），之后逐渐变暗。它随时可能以超新星的形式结束生命——可能就在今晚，也可能在 10 万年后。',
+            stats: [
+                {zh:'~8,500 光年', en:'~8,500 ly', labelZh:'距离', labelEn:'Distance'},
+                {zh:'船底座', en:'Carina', labelZh:'星座', labelEn:'Constellation'},
+                {zh:'+3.0', en:'+3.0', labelZh:'视星等', labelEn:'Apparent Mag.'},
+                {zh:'~460 光年', en:'~460 ly', labelZh:'直径', labelEn:'Diameter'},
+                {zh:'南天', en:'Southern sky', labelZh:'可见区域', labelEn:'Visible From'},
+                {zh:'>100 M☉', en:'>100 M☉', labelZh:'最亮恒星质量', labelEn:'Brightest Star Mass'},
+            ],
+            observeEn: 'Southern Hemisphere only (below 30°S is ideal). Invisible north of 30°N. Naked-eye visible as a bright nebulous patch. Any telescope reveals stunning detail.', observe: '南半球观测最佳（南纬 30° 以南全年可见）。北纬 30° 以北不可见。肉眼可见为明亮的星云状光斑。双筒望远镜和任何口径的望远镜都能看到壮观的细节。是南天观测的必看目标。',
+            links: [
+                ['Webb Cosmic Cliffs', 'https://webbtelescope.org/contents/media/images/2022/031/01G77PKB8NKR7JR7SX6T64VF4H'],
+                ['Hubble Carina', 'https://hubblesite.org/contents/media/images/2007/16/2102-Image.html'],
+            ],
+        },
+        {
+            id: 'veil',
+            name: '面纱星云',
+            nameEn: 'Veil Nebula · NGC 6960/6992/6995',
+            type: '超新星遗迹', typeEn: 'Supernova Remnant',
+            icon: '🌊', image: '../images/veil.jpg', credit: 'NASA, ESA, Hubble Heritage Team', bg: 'bg-veil',
+            descEn: 'The spectacular aftermath of a massive star that exploded ~8,000–10,000 years ago. The shockwave still expands today, creating intricate filamentary structures spanning 3° of sky — six times the Full Moon\'s diameter.', desc: '面纱星云是约 8,000-10,000 年前一颗大质量恒星爆炸后留下的巨大遗迹。爆炸产生的冲击波至今仍在向外扩展，加热星际介质，形成了精细复杂的丝状结构。整个星云横跨约 3° 的天空，相当于 6 个满月并排直径。它分为东面纱（NGC 6992）、西面纱（NGC 6960，包含著名的"女巫扫帚"）等多个部分。',
+            funFactEn: 'The progenitor star was ~20 solar masses. The supernova released more energy than our Sun will produce in its entire 10-billion-year lifetime.', funFact: '面纱星云的前身星质量约为太阳的 20 倍——如果把它放在太阳的位置，它的大小将超出地球轨道。它的超新星爆发释放的能量，比太阳在整个 100 亿年生命中发出的总能量还要多。',
+            stats: [
+                {zh:'~2,400 光年', en:'~2,400 ly', labelZh:'距离', labelEn:'Distance'},
+                {zh:'天鹅座', en:'Cygnus', labelZh:'星座', labelEn:'Constellation'},
+                {zh:'+7.0', en:'+7.0', labelZh:'视星等（最亮部分）', labelEn:'Mag. (Brightest Part)'},
+                {zh:'~130 光年', en:'~130 ly', labelZh:'直径', labelEn:'Diameter'},
+                {zh:'~8,000-10,000 年', en:'~8,000–10,000 yr', labelZh:'年龄', labelEn:'Age'},
+                {zh:'3°', en:'3°', labelZh:'角大小（~6 个满月）', labelEn:'Angular Size (~6 Full Moons)'},
+            ],
+            observeEn: 'Best in summer (Cygnus). An OIII filter is nearly essential — it boosts contrast dramatically. A 4-inch refractor + OIII in dark skies reveals delicate filamentary structure.', observe: '夏季观测最佳（天鹅座为夏季星座）。OIII 滤镜几乎是目视观测面纱星云的必需品——它可以将星云的对比度提升数倍。用 4 英寸折射镜 + OIII 滤镜在暗空下即可看到精细的丝状结构。',
+            links: [
+                ['Hubble Veil', 'https://hubblesite.org/contents/media/images/2015/29/3586-Image.html'],
+                ['APOD Veil', 'https://apod.nasa.gov/apod/ap220926.html'],
+            ],
+        },
+        {
+            id: 'catseye',
+            name: '猫眼星云',
+            nameEn: "Cat's Eye Nebula · NGC 6543",
+            type: '行星状星云', typeEn: 'Planetary Nebula',
+            icon: '👁️', image: '../images/catseye.jpg', credit: 'NASA, ESA, HEIC, Hubble Heritage Team', bg: 'bg-catseye',
+            descEn: 'One of the most structurally complex planetary nebulae known. Hubble images revealed over 11 concentric shells, each representing a distinct mass-ejection episode from the dying central star, spaced ~1,500 years apart.', desc: '猫眼星云是结构最复杂的行星状星云之一，哈勃影像揭示了多达 11 层以上的同心壳层——每一层代表中心恒星死亡过程中一次独立的质量抛射事件，间隔约 1,500 年。这些复杂的结构挑战了传统的恒星演化模型，科学家仍在研究其形成机制。它是第一个被哈勃望远镜详细拍摄的行星状星云。',
+            funFactEn: 'Despite its tiny apparent size (only 20 arcseconds), the Cat\'s Eye has exceptionally high surface brightness. At 300×+ magnification, experienced observers can glimpse its inner ring structure.', funFact: '猫眼星云是业余天文学家最喜欢的挑战目标之一。它虽小（仅 20 角秒），但表面亮度极高——在极高倍率下（300×+），经验丰富的观测者能看到内环结构和蓝绿色的色彩。',
+            stats: [
+                {zh:'~3,300 光年', en:'~3,300 ly', labelZh:'距离', labelEn:'Distance'},
+                {zh:'天龙座', en:'Draco', labelZh:'星座', labelEn:'Constellation'},
+                {zh:'+8.1', en:'+8.1', labelZh:'视星等', labelEn:'Apparent Mag.'},
+                {zh:'~0.4 光年', en:'~0.4 ly', labelZh:'核心直径', labelEn:'Core Diameter'},
+                {zh:'~1,000 年', en:'~1,000 yr', labelZh:'壳层年龄', labelEn:'Shell Age'},
+                {zh:'1786 年', en:'1786', labelZh:'发现年份（赫歇尔）', labelEn:'Discovered (Herschel)'},
+            ],
+            observeEn: 'Visible most of the year (Draco is circumpolar). A 4-inch scope at high power shows a blue-green disk. 8-inch+ reveals the bright inner ring.', observe: '全年大部分时间可见（天龙座为拱极星座）。用 4 英寸望远镜在高倍率下可见蓝绿色小圆面。8 英寸以上可见内部亮环。极暗天空 + 16 英寸以上可见部分壳层结构的暗示。',
+            links: [
+                ['Hubble NGC 6543', 'https://hubblesite.org/contents/media/images/2004/27/1571-Image.html'],
+                ['Chandra NGC 6543', 'https://chandra.harvard.edu/photo/2008/catseye/'],
+            ],
+        },
+    ];
+
+    // ==================== BUILD CARDS ====================
+    const L = (obj, f) => (_lang() === 'en' && obj[f+'En']) ? obj[f+'En'] : obj[f];
+    const grid = document.getElementById('galleryGrid');
+    objects.forEach(obj => {
+        const card = document.createElement('div');
+        card.className = 'g-card anim-fade-up';
+        card.innerHTML = `
+            <div class="gc-visual ${obj.bg}">
+                <span class="click-hint"><span lang="zh">点击查看</span><span lang="en">Click to view</span></span>
+                ${obj.icon}
+            </div>
+            <div class="gc-body">
+                <h3>${L(obj,'name')}</h3>
+                <p class="cat">${L(obj,'type')}</p>
+                <p>${L(obj,'desc').slice(0, 90)}...</p>
+                <div class="gc-stats">
+                    ${obj.stats.slice(0,3).map(s => '<span><span lang="zh">'+s.zh+'</span><span lang="en">'+s.en+'</span></span>').join('')}
+                </div>
+            </div>
+        `;
+        card.addEventListener('click', () => openModal(obj));
+        grid.appendChild(card);
+    });
+    // Re-apply translations for dynamically created lang spans
+    if (window._applyTranslations) window._applyTranslations();
+
+    // ==================== MODAL LOGIC ====================
+    const overlay = document.getElementById('modalOverlay');
+    const modalVisual = document.getElementById('modalVisual');
+    const modalBody = document.getElementById('modalBody');
+    const modalClose = document.getElementById('modalClose');
+
+    function openModal(obj) {
+        modalVisual.className = 'm-visual ' + obj.bg;
+        modalVisual.innerHTML = '<div class="m-emoji">' + obj.icon + '</div>';
+        var img = document.createElement('img');
+        img.src = obj.image;
+        img.alt = obj.name;
+        img.onload = function() { this.style.opacity = '1'; };
+        img.style.opacity = '0';
+        img.style.transition = 'opacity 0.3s';
+        modalVisual.appendChild(img);
+
+        modalBody.innerHTML = `
+            <h2>${L(obj,'name')}</h2>
+            <p class="m-sub">${obj.nameEn}<br><span style="font-size:0.68rem;color:var(--text-muted);">Credit: ${obj.credit}</span><br>${L(obj,'type')}</p>
+            <p class="m-desc">${L(obj,'desc')}</p>
+            <div class="m-stats">
+                ${obj.stats.map(s => `
+                    <div class="ms">
+                        <div class="msv"><span lang="zh">${s.zh}</span><span lang="en">${s.en}</span></div>
+                        <div class="msl"><span lang="zh">${s.labelZh}</span><span lang="en">${s.labelEn}</span></div>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="m-funfact"><strong>${_t('gallery.funfact')}：</strong>${L(obj,'funFact')}</div>
+            <div class="m-observe"><strong>${_t('gallery.observe')}：</strong>${L(obj,'observe')}</div>
+            <div class="m-links">
+                <span style="font-size:0.78rem;color:var(--text-muted);margin-right:4px;"><span lang="zh">更多：</span><span lang="en">More:</span></span>
+                ${obj.links.map(l => '<a href="'+l[1]+'" target="_blank" rel="noopener">'+l[0]+' <span style="font-size:0.7rem;">→</span></a>').join('')}
+            </div>
+        `;
+
+        // Re-apply translations for dynamically created lang spans in modal
+        if (window._applyTranslations) window._applyTranslations();
+
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        modalVisual.parentElement.scrollTop = 0;
+
+        // update URL hash
+        history.replaceState(null, '', '#' + obj.id);
+    }
+
+    function closeModal() {
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+        history.replaceState(null, '', window.location.pathname);
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+    });
+
+    // Open from URL hash on load
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+        const obj = objects.find(o => o.id === hash);
+        if (obj) setTimeout(() => openModal(obj), 400);
+    }
+    </script>
+</body>
+</html>

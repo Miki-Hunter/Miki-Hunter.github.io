@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fly2Sun 天文百科 — 从基础概念到前沿宇宙学，循序渐进读懂星空">
+    <title>天文百科 | Fly2Sun.eu.org</title>
+    <link rel="stylesheet" href="../css/style.css?v=2">
+    <style>
+        .kb-layout {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 28px;
+            max-width: 1000px; margin: 0 auto;
+        }
+        .kb-sidebar {
+            position: sticky; top: calc(var(--nav-h) + 20px);
+            align-self: start;
+        }
+        .kb-sidebar nav {
+            display: flex; flex-direction: column; gap: 4px;
+        }
+        .kb-sidebar a {
+            display: block;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.84rem; letter-spacing: 0.04em;
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: all 0.25s;
+            border: 1px solid transparent;
+        }
+        .kb-sidebar a:hover,
+        .kb-sidebar a.active {
+            color: var(--cyan);
+            background: rgba(0,200,255,0.06);
+            border-color: var(--border);
+            text-decoration: none;
+        }
+
+        .kb-section {
+            margin-bottom: 40px;
+            scroll-margin-top: calc(var(--nav-h) + 20px);
+        }
+        .kb-section h2 {
+            font-size: 1.3rem; letter-spacing: 0.08em;
+            color: #fff; margin-bottom: 6px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .kb-section .kb-subtitle {
+            font-size: 0.78rem; color: var(--cyan);
+            letter-spacing: 0.1em; margin-bottom: 16px;
+        }
+        .kb-section p {
+            font-size: 0.9rem; color: var(--text-dim);
+            line-height: 1.8; margin-bottom: 14px;
+        }
+
+        .kb-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 22px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        .kb-card:hover { border-color: var(--border-h); }
+        .kb-card h4 {
+            font-size: 1rem; letter-spacing: 0.05em;
+            color: var(--cyan); margin-bottom: 6px;
+        }
+        .kb-card p {
+            font-size: 0.84rem; color: var(--text-dim);
+            line-height: 1.7; margin-bottom: 0;
+        }
+
+        .kb-fact-box {
+            background: rgba(0,200,255,0.03);
+            border-left: 2px solid var(--cyan);
+            padding: 14px 18px;
+            margin: 16px 0;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        }
+        .kb-fact-box p {
+            font-size: 0.86rem; color: var(--text);
+            line-height: 1.7; margin-bottom: 0;
+        }
+        .kb-fact-box strong { color: var(--cyan); }
+
+        .kb-table {
+            width: 100%; border-collapse: collapse;
+            font-size: 0.82rem; margin: 14px 0;
+        }
+        .kb-table th {
+            text-align: left; padding: 10px 12px;
+            color: var(--cyan); letter-spacing: 0.05em;
+            font-weight: 600; font-size: 0.72rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            white-space: nowrap;
+        }
+        .kb-table td {
+            padding: 10px 12px; color: var(--text-dim);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            line-height: 1.6;
+            white-space: nowrap;
+        }
+        .kb-table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 14px 0;
+            border-radius: var(--radius-sm);
+        }
+        .kb-table-wrap .kb-table { margin: 0; }
+        .kb-table tr:hover td { background: rgba(255,255,255,0.015); }
+
+        @media (max-width: 768px) {
+            .kb-layout {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                display: block;
+            }
+            .kb-section, .kb-card, .kb-fact-box, .kb-table-wrap, main {
+                max-width: 100%;
+                overflow-wrap: break-word;
+            }
+            .kb-sidebar {
+                position: sticky;
+                top: var(--nav-h);
+                z-index: 10;
+                background: rgba(5,5,18,0.95);
+            }
+            .kb-sidebar {
+                position: sticky;
+                top: var(--nav-h);
+                z-index: 10;
+                background: rgba(5,5,18,0.95);
+                backdrop-filter: blur(14px);
+                -webkit-backdrop-filter: blur(14px);
+                border-bottom: 1px solid rgba(255,255,255,0.06);
+            }
+            .kb-sidebar nav {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                gap: 4px;
+                padding: 6px 0;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .kb-sidebar a {
+                white-space: nowrap;
+                font-size: 0.74rem;
+                padding: 7px 13px;
+                border-radius: 18px;
+                flex-shrink: 0;
+                border: 1px solid rgba(255,255,255,0.08);
+                background: rgba(255,255,255,0.02);
+            }
+            .kb-sidebar a.active,
+            .kb-sidebar a:hover {
+                background: rgba(0,200,255,0.1);
+                border-color: var(--cyan);
+                color: var(--cyan);
+                text-decoration: none;
+            }
+
+            .kb-section { margin-bottom: 30px; }
+            .kb-section h2 { font-size: 1.1rem; }
+            .kb-section p { font-size: 0.84rem; line-height: 1.7; }
+
+            .kb-card { padding: 16px; margin-bottom: 12px; }
+            .kb-card h4 { font-size: 0.92rem; }
+            .kb-card p { font-size: 0.8rem; }
+
+            .kb-fact-box { padding: 12px 14px; margin: 12px 0; }
+            .kb-fact-box p { font-size: 0.8rem; }
+
+            .kb-table th, .kb-table td { padding: 8px 10px; font-size: 0.7rem; }
+        }
+
+        @media (max-width: 480px) {
+            .kb-sidebar { padding: 6px 0; }
+            .kb-sidebar nav { gap: 3px; }
+            .kb-sidebar a { font-size: 0.7rem; padding: 6px 8px; border-radius: 14px; }
+
+            .kb-section { margin-bottom: 24px; }
+            .kb-section h2 { font-size: 1rem; }
+
+            .kb-card { padding: 14px 12px; }
+            .kb-card h4 { font-size: 0.86rem; }
+            .kb-card p { font-size: 0.76rem; }
+
+            .kb-table th, .kb-table td { padding: 6px 8px; font-size: 0.65rem; }
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <div class="page-wrap">
+        <div class="container section">
+            <div class="page-title anim-fade-up">
+                <h1><span lang="zh">天文百科</span><span lang="en">ASTRONOMY 101</span></h1>
+                <p class="subtitle"><span lang="zh">ASTRONOMY 101</span><span lang="en">天文百科</span></p>
+                <div class="hr"></div>
+                <p style="color:var(--text-dim);font-size:0.85rem;margin-top:10px;">
+                    <span lang="zh">从基础概念到前沿宇宙学，循序渐进读懂星空的秘密</span><span lang="en">From basic concepts to cutting-edge cosmology — understand the universe step by step</span>
+                </p>
+            </div>
+
+            <div class="kb-layout anim-fade-up">
+                <!-- Sidebar -->
+                <aside class="kb-sidebar">
+                    <nav>
+                        <a href="#solar-system" class="active"><span lang="zh">太阳系</span><span lang="en">Solar System</span></a>
+                        <a href="#stars"><span lang="zh">恒星演化</span><span lang="en">Stellar Evolution</span></a>
+                        <a href="#galaxies"><span lang="zh">星系</span><span lang="en">Galaxies</span></a>
+                        <a href="#cosmology"><span lang="zh">宇宙学</span><span lang="en">Cosmology</span></a>
+                        <a href="#exoplanets"><span lang="zh">系外行星</span><span lang="en">Exoplanets</span></a>
+                        <a href="#phenomena"><span lang="zh">天文现象</span><span lang="en">Celestial Phenomena</span></a>
+                        <a href="#scales"><span lang="zh">宇宙尺度</span><span lang="en">Cosmic Scale</span></a>
+                    </nav>
+                </aside>
+
+                <!-- Content -->
+                <main>
+
+                    <!-- Solar System -->
+                    <div class="kb-section" id="solar-system">
+                        <h2><span lang="zh">太阳系</span><span lang="en">The Solar System</span></h2>
+                        <p class="kb-subtitle"><span lang="zh">THE SOLAR SYSTEM</span><span lang="en">THE SOLAR SYSTEM</span></p>
+                        <p><span lang="zh">太阳系由一颗恒星（太阳）、八颗行星、数百颗卫星、数十万颗小行星和无数彗星组成。它形成于约 46 亿年前，从一团巨大的分子云中坍缩而成。太阳集中了太阳系 99.86% 的质量，其引力支配着所有天体的运动。</span><span lang="en">The Solar System consists of one star (the Sun), eight planets, hundreds of moons, hundreds of thousands of asteroids, and countless comets. It formed about 4.6 billion years ago from the gravitational collapse of a giant molecular cloud. The Sun contains 99.86% of the system's mass, and its gravity governs the motion of all other bodies.</span></p>
+                        <div class="kb-card">
+                            <h4><span lang="zh">类地行星 vs 类木行星</span><span lang="en">Terrestrial vs Jovian Planets</span></h4>
+                            <p><span lang="zh">内太阳系（水星、金星、地球、火星）是岩石构成的类地行星；外太阳系（木星、土星、天王星、海王星）是气态/冰质巨行星。两者之间的小行星带是太阳系形成初期的"建筑材料"遗存。</span><span lang="en">The inner Solar System (Mercury, Venus, Earth, Mars) consists of rocky terrestrial planets; the outer Solar System (Jupiter, Saturn, Uranus, Neptune) hosts gas and ice giants. Between them lies the asteroid belt — leftover "building materials" from the Solar System's formation.</span></p>
+                        </div>
+                        <div class="kb-card">
+                            <h4><span lang="zh">柯伊伯带与奥尔特云</span><span lang="en">Kuiper Belt & Oort Cloud</span></h4>
+                            <p><span lang="zh">海王星轨道之外是柯伊伯带——一片包含冥王星等矮行星和无数冰质天体的区域。更远处是理论上的奥尔特云，一个包围太阳系的球状彗星"仓库"，半径可能达到 1 光年。</span><span lang="en">Beyond Neptune lies the Kuiper Belt — a region containing dwarf planets like Pluto and countless icy bodies. Even farther out is the theoretical Oort Cloud, a spherical comet "reservoir" surrounding the Solar System with a radius that may reach one light-year.</span></p>
+                        </div>
+                        <div class="kb-fact-box">
+                            <p><span lang="zh"><strong>尺度感：</strong>如果把太阳缩小成一个篮球（直径 24 cm），地球将是一粒 2 mm 的芝麻，位于 26 米之外。海王星在 780 米外。最近的恒星（比邻星）——约 7,000 公里外，相当于从北京到纽约。</span><span lang="en"><strong>Sense of Scale:</strong> If the Sun were a basketball (24 cm diameter), Earth would be a 2 mm sesame seed 26 meters away. Neptune would be 780 meters away. The nearest star (Proxima Centauri) — about 7,000 km away, roughly the distance from Beijing to New York.</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Stars -->
+                    <div class="kb-section" id="stars">
+                        <h2><span lang="zh">恒星演化</span><span lang="en">Stellar Evolution</span></h2>
+                        <p class="kb-subtitle"><span lang="zh">STELLAR EVOLUTION</span><span lang="en">STELLAR EVOLUTION</span></p>
+                        <p><span lang="zh">恒星的命运由质量决定。它们诞生于分子云的引力坍缩，在主序星阶段稳定燃烧氢燃料数十亿到数万亿年。当核心氢耗尽时，恒星走向不同的终局。</span><span lang="en">A star's fate is determined by its mass. Born from the gravitational collapse of molecular clouds, stars steadily burn hydrogen for billions to trillions of years on the main sequence. When core hydrogen is exhausted, they meet dramatically different ends.</span></p>
+                        <div class="kb-table-wrap">
+                        <table class="kb-table">
+                            <thead>
+                                <tr><th><span lang="zh">初始质量</span><span lang="en">Initial Mass</span></th><th><span lang="zh">主序星寿命</span><span lang="en">Main Sequence Lifetime</span></th><th><span lang="zh">最终阶段</span><span lang="en">Final Stage</span></th><th><span lang="zh">残骸</span><span lang="en">Remnant</span></th><th><span lang="zh">例子</span><span lang="en">Example</span></th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>&lt; 0.5 M☉</td><td><span lang="zh">数千亿年+</span><span lang="en">Trillions of years</span></td><td><span lang="zh">不经过红巨星</span><span lang="en">No red giant phase</span></td><td><span lang="zh">氦白矮星</span><span lang="en">Helium white dwarf</span></td><td><span lang="zh">比邻星</span><span lang="en">Proxima Centauri</span></td></tr>
+                                <tr><td>0.5-8 M☉</td><td><span lang="zh">100亿-1000亿年</span><span lang="en">10-100 billion yr</span></td><td><span lang="zh">行星状星云</span><span lang="en">Planetary nebula</span></td><td><span lang="zh">白矮星</span><span lang="en">White dwarf</span></td><td><span lang="zh">太阳</span><span lang="en">The Sun</span></td></tr>
+                                <tr><td>8-25 M☉</td><td><span lang="zh">1000万-1亿年</span><span lang="en">10-100 million yr</span></td><td><span lang="zh">超新星爆发</span><span lang="en">Supernova explosion</span></td><td><span lang="zh">中子星</span><span lang="en">Neutron star</span></td><td><span lang="zh">蟹状星云前身</span><span lang="en">Crab progenitor</span></td></tr>
+                                <tr><td>&gt; 25 M☉</td><td><span lang="zh">&lt; 1000万年</span><span lang="en">&lt; 10 million yr</span></td><td><span lang="zh">极超新星</span><span lang="en">Hypernova</span></td><td><span lang="zh">黑洞</span><span lang="en">Black hole</span></td><td><span lang="zh">海山二?</span><span lang="en">Eta Carinae?</span></td></tr>
+                            </tbody>
+                        </table>
+                        </div>
+                        <div class="kb-fact-box">
+                            <p><span lang="zh"><strong>我们都是星尘：</strong>除了氢、氦和少量锂（大爆炸产物），你身体里的碳、氧、铁、钙等所有重元素，都是在恒星核心中通过核聚变合成，并在超新星爆发中散播到宇宙中的。正如卡尔·萨根所说——"我们是星辰之子。"</span><span lang="en"><strong>We are stardust:</strong> Except for hydrogen, helium, and trace lithium (products of the Big Bang), every heavy element in your body — carbon, oxygen, iron, calcium — was forged by nuclear fusion inside stars and scattered across the cosmos by supernova explosions. As Carl Sagan said — "We are made of star-stuff."</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Galaxies -->
+                    <div class="kb-section" id="galaxies">
+                        <h2><span lang="zh">星系</span><span lang="en">Galaxies</span></h2>
+                        <p class="kb-subtitle"><span lang="zh">GALAXIES</span><span lang="en">GALAXIES</span></p>
+                        <p><span lang="zh">星系是由引力束缚的巨大恒星系统。银河系是本星系群中第二大的星系，包含约 1000-4000 亿颗恒星，直径约 10-18 万光年。我们位于猎户座旋臂内侧，距银心约 2.6 万光年。</span><span lang="en">Galaxies are vast stellar systems bound by gravity. The Milky Way is the second-largest galaxy in the Local Group, containing 100–400 billion stars and spanning 100,000–180,000 light-years. We sit on the inner edge of the Orion Arm, about 26,000 light-years from the galactic center.</span></p>
+                        <div class="kb-card">
+                            <h4><span lang="zh">哈勃星系分类</span><span lang="en">Hubble Galaxy Classification</span></h4>
+                            <p><span lang="zh">埃德温·哈勃将星系分为：椭圆星系（无结构、老年恒星为主）、螺旋星系（如银河系、仙女座，有旋臂和活跃的恒星形成）和不规则星系（如大小麦哲伦云，无规则形状）。</span><span lang="en">Edwin Hubble classified galaxies into ellipticals (featureless, dominated by old stars), spirals (like the Milky Way and Andromeda, with spiral arms and active star formation), and irregulars (like the Magellanic Clouds, lacking regular structure).</span></p>
+                        </div>
+                        <div class="kb-card">
+                            <h4><span lang="zh">星系碰撞与合并</span><span lang="en">Galaxy Collisions & Mergers</span></h4>
+                            <p><span lang="zh">星系之间的碰撞在宇宙中非常普遍。仙女座星系正以每秒约 110 公里的速度朝银河系靠近，两者将在约 40 亿年后合并。由于恒星间距极大，碰撞过程中恒星几乎不会相撞——但引力将彻底重塑两个星系的结构。</span><span lang="en">Galaxy collisions are common throughout the Universe. Andromeda is approaching the Milky Way at ~110 km/s and the two will merge in about 4 billion years. Because stars are so far apart, individual stellar collisions are extremely unlikely — but gravity will fundamentally reshape both galaxies.</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Cosmology -->
+                    <div class="kb-section" id="cosmology">
+                        <h2><span lang="zh">宇宙学基础</span><span lang="en">Cosmology Basics</span></h2>
+                        <p class="kb-subtitle"><span lang="zh">COSMOLOGY</span><span lang="en">COSMOLOGY</span></p>
+                        <p><span lang="zh">宇宙诞生于约 138 亿年前的大爆炸（Big Bang）。最初的宇宙是极端炽热致密的奇点，然后开始急速膨胀和冷却。宇宙背景微波辐射是大爆炸的"余晖"——1965 年偶然发现，证实了大爆炸理论。</span><span lang="en">The Universe was born ~13.8 billion years ago in the Big Bang — beginning as an infinitely hot, dense singularity that rapidly expanded and cooled. The Cosmic Microwave Background radiation, the Big Bang's "afterglow," was accidentally discovered in 1965 and provided powerful confirmation of the theory.</span></p>
+                        <div class="kb-card">
+                            <h4><span lang="zh">暗物质与暗能量</span><span lang="en">Dark Matter & Dark Energy</span></h4>
+                            <p><span lang="zh">已知的普通物质仅占宇宙总质能的约 5%。约 27% 是暗物质——不发光但通过引力效应被间接探测到。约 68% 是暗能量——一种推动宇宙加速膨胀的神秘力量。它们的本质是当代物理学最大的未解之谜之一。</span><span lang="en">Ordinary matter accounts for only ~5% of the Universe's total mass-energy. About 27% is dark matter — invisible but detected through its gravitational effects. Roughly 68% is dark energy — a mysterious force driving the accelerating expansion of the Universe. Their nature remains one of the greatest unsolved mysteries in physics.</span></p>
+                        </div>
+                        <div class="kb-card">
+                            <h4><span lang="zh">宇宙的最终命运</span><span lang="en">The Ultimate Fate of the Universe</span></h4>
+                            <p><span lang="zh">目前的观测表明宇宙正在加速膨胀。如果暗能量保持不变，宇宙将走向"热寂"——所有恒星燃尽、星系解体、最终只剩稀薄的粒子在无限空间中漂移。但我们对暗能量的了解还太少，其他结局（大撕裂、大收缩）仍有可能。</span><span lang="en">Current observations indicate the Universe is expanding at an accelerating rate. If dark energy remains constant, the Universe faces "heat death" — all stars burn out, galaxies dissolve, and only sparse particles drift through infinite space. But our understanding of dark energy remains limited, and other fates (Big Rip, Big Crunch) are still possible.</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Exoplanets -->
+                    <div class="kb-section" id="exoplanets">
+                        <h2><span lang="zh">系外行星</span><span lang="en">Exoplanets</span></h2>
+                        <p class="kb-subtitle"><span lang="zh">EXOPLANETS</span><span lang="en">EXOPLANETS</span></p>
+                        <p><span lang="zh">截至 2026 年，天文学家已确认超过 6,000 颗系外行星，另有数千颗候选等待验证。它们从比水星还小的岩石行星到比木星大数倍的超级木星不等。其中约数十颗位于"宜居带"——温度适合液态水存在的轨道范围。</span><span lang="en">As of 2026, astronomers have confirmed over 6,000 exoplanets, with thousands more candidates awaiting verification. They range from rocky worlds smaller than Mercury to super-Jupiters several times the size of our largest planet. Dozens lie in the "habitable zone" — the orbital range where temperatures allow liquid water to exist.</span></p>
+                        <div class="kb-card">
+                            <h4><span lang="zh">探测方法</span><span lang="en">Detection Methods</span></h4>
+                            <p><span lang="zh"><strong>凌星法（Transit）：</strong>行星经过恒星前方时造成微弱的亮度下降——开普勒和 TESS 任务用此方法发现了大多数系外行星。<strong>径向速度法：</strong>行星引力拉扯恒星造成光谱的周期性偏移。<strong>直接成像：</strong>用日冕仪遮挡恒星光，直接拍摄行星——仅适用于年轻、大质量的远处行星。</span><span lang="en"><strong>Transit Method:</strong> A planet passing in front of its star causes a tiny dip in brightness — Kepler and TESS discovered most exoplanets this way. <strong>Radial Velocity:</strong> A planet's gravitational tug causes periodic shifts in the star's spectrum. <strong>Direct Imaging:</strong> Using a coronagraph to block starlight and photograph the planet directly — only feasible for young, massive planets far from their stars.</span></p>
+                        </div>
+                        <div class="kb-fact-box">
+                            <p><span lang="zh"><strong>最著名的系外行星系统：</strong>TRAPPIST-1 拥有 7 颗地球大小的岩石行星，其中 3 颗位于宜居带。距地球仅 40 光年，是韦伯望远镜重点观测目标——可能在未来几十年内探测到大气中的生物标志物。</span><span lang="en"><strong>Most famous exoplanet system:</strong> TRAPPIST-1 hosts seven Earth-sized rocky planets, three of which lie in the habitable zone. Just 40 light-years away, it is a prime target for the Webb Telescope — which may detect atmospheric biosignatures within the coming decades.</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Phenomena -->
+                    <div class="kb-section" id="phenomena">
+                        <h2><span lang="zh">天文现象</span><span lang="en">Celestial Phenomena</span></h2>
+                        <p class="kb-subtitle"><span lang="zh">CELESTIAL PHENOMENA</span><span lang="en">CELESTIAL PHENOMENA</span></p>
+                        <div class="kb-card">
+                            <h4><span lang="zh">日食与月食</span><span lang="en">Solar & Lunar Eclipses</span></h4>
+                            <p><span lang="zh">日食发生在新月经过太阳前方时，分为日全食（月球完全遮住太阳光球）、日环食（月球太远，留下光环）和日偏食。月食发生在满月进入地球影子时——月全食时月球呈铜红色（"血月"），因为地球大气折射的红光照亮了月面。</span><span lang="en">Solar eclipses occur when the New Moon passes in front of the Sun — categorized as total (Moon fully covers the photosphere), annular (Moon is too far, leaving a ring), or partial. Lunar eclipses occur when the Full Moon enters Earth's shadow — during totality the Moon turns copper-red (a "Blood Moon") as Earth's atmosphere refracts red light onto the lunar surface.</span></p>
+                        </div>
+                        <div class="kb-card">
+                            <h4><span lang="zh">流星雨</span><span lang="en">Meteor Showers</span></h4>
+                            <p><span lang="zh">当地球穿过彗星留下的尘埃轨迹时，尘埃粒子以极高速度进入大气层并燃烧，形成流星雨。著名流星雨包括：英仙座流星雨（8月，峰值 100 颗/小时）、双子座流星雨（12月，峰值 120 颗/小时）和狮子座流星雨（11月，每 33 年爆发）。</span><span lang="en">When Earth passes through debris trails left by comets, dust particles enter the atmosphere at extreme speeds and burn up, creating meteor showers. Notable showers include the Perseids (August, peak 100/hour), Geminids (December, peak 120/hour), and Leonids (November, outbursts every 33 years).</span></p>
+                        </div>
+                        <div class="kb-card">
+                            <h4><span lang="zh">极光</span><span lang="en">Aurorae</span></h4>
+                            <p><span lang="zh">太阳风中的带电粒子被地球磁场引导至两极，与高层大气原子碰撞激发发光。氧原子产生绿色和红色极光（最常见），氮分子产生蓝色和紫色。太阳活动高峰期（约每 11 年），极光可见范围向南扩展。</span><span lang="en">Charged particles from the solar wind are funneled by Earth's magnetic field toward the poles, where they collide with upper atmospheric atoms. Oxygen produces green and red aurorae (most common), while nitrogen creates blue and purple. During solar maximum (~every 11 years), aurorae become visible at lower latitudes.</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Cosmic Scale -->
+                    <div class="kb-section" id="scales">
+                        <h2><span lang="zh">宇宙尺度</span><span lang="en">Cosmic Scale</span></h2>
+                        <p class="kb-subtitle"><span lang="zh">COSMIC SCALE</span><span lang="en">COSMIC SCALE</span></p>
+                        <p><span lang="zh">宇宙的尺度超越了人类的直观理解。以下是逐级放大的宇宙距离阶梯：</span><span lang="en">The scale of the Universe exceeds human intuition. Here is the cosmic distance ladder, step by step:</span></p>
+                        <div class="kb-table-wrap">
+                        <table class="kb-table">
+                            <tbody>
+                                <tr><td><span lang="zh">地球到月球</span><span lang="en">Earth to Moon</span></td><td><span lang="zh">38 万 km</span><span lang="en">380,000 km</span></td><td><span lang="zh">光行 1.3 秒</span><span lang="en">1.3 light-seconds</span></td></tr>
+                                <tr><td><span lang="zh">地球到太阳</span><span lang="en">Earth to Sun</span></td><td><span lang="zh">1.5 亿 km</span><span lang="en">150 million km</span></td><td><span lang="zh">光行 8.3 分钟（1 AU）</span><span lang="en">8.3 light-minutes (1 AU)</span></td></tr>
+                                <tr><td><span lang="zh">太阳到海王星</span><span lang="en">Sun to Neptune</span></td><td><span lang="zh">45 亿 km</span><span lang="en">4.5 billion km</span></td><td><span lang="zh">光行 4.1 小时</span><span lang="en">4.1 light-hours</span></td></tr>
+                                <tr><td><span lang="zh">到奥尔特云边缘</span><span lang="en">To Oort Cloud edge</span></td><td><span lang="zh">~1.5 光年</span><span lang="en">~1.5 light-years</span></td><td><span lang="zh">太阳引力边界</span><span lang="en">Solar gravitational boundary</span></td></tr>
+                                <tr><td><span lang="zh">到比邻星（最近恒星）</span><span lang="en">To Proxima Centauri (nearest star)</span></td><td><span lang="zh">4.2 光年</span><span lang="en">4.2 light-years</span></td><td><span lang="zh">旅行者号需飞 7 万年</span><span lang="en">70,000 years for Voyager</span></td></tr>
+                                <tr><td><span lang="zh">银河系直径</span><span lang="en">Milky Way diameter</span></td><td><span lang="zh">10-18 万 光年</span><span lang="en">100,000-180,000 ly</span></td><td><span lang="zh">含 1000-4000 亿恒星</span><span lang="en">100-400 billion stars</span></td></tr>
+                                <tr><td><span lang="zh">到仙女座星系</span><span lang="en">To Andromeda Galaxy</span></td><td><span lang="zh">254 万 光年</span><span lang="en">2.54 million ly</span></td><td><span lang="zh">本星系群最大成员</span><span lang="en">Largest Local Group member</span></td></tr>
+                                <tr><td><span lang="zh">可观测宇宙半径</span><span lang="en">Observable Universe radius</span></td><td><span lang="zh">~465 亿 光年</span><span lang="en">~46.5 billion ly</span></td><td><span lang="zh">含 ~2 万亿个星系</span><span lang="en">~2 trillion galaxies</span></td></tr>
+                            </tbody>
+                        </table>
+                        </div>
+                        <div class="kb-fact-box">
+                            <p><span lang="zh"><strong>为什么可观测宇宙半径是 465 亿光年而非 138 亿光年？</strong>因为宇宙在膨胀。138 亿年前发出的光，其源头因空间膨胀已经远离到了 465 亿光年之外。我们看到的不是天体的现在，而是它们 138 亿年前的过去。</span><span lang="en"><strong>Why is the observable Universe's radius 46.5 billion light-years rather than 13.8 billion?</strong> Because the Universe is expanding. Light that was emitted 13.8 billion years ago has had its source carried to a distance of 46.5 billion light-years by cosmic expansion. We see objects not as they are now, but as they were 13.8 billion years ago.</span></p>
+                        </div>
+                    </div>
+
+                </main>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script src="../js/i18n.js?v=2"></script>
+    <script src="../js/components.js?v=2"></script>
+    <script src="../js/main.js?v=2"></script>
+    <script>
+        // Sidebar scroll spy
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.kb-section');
+            const links = document.querySelectorAll('.kb-sidebar a');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        links.forEach(l => l.classList.remove('active'));
+                        const id = e.target.id;
+                        const active = document.querySelector(`.kb-sidebar a[href="#${id}"]`);
+                        if (active) {
+                            active.classList.add('active');
+                            active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                        }
+                    }
+                });
+            }, { threshold: 0.3, rootMargin: '-80px 0px -60% 0px' });
+            sections.forEach(s => observer.observe(s));
+        });
+    </script>
+</body>
+</html>

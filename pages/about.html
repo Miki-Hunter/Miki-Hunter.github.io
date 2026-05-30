@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="关于 Fly2Sun — 奔赴星海，探索无限。开源天文科普项目。">
+    <title>关于 | Fly2Sun.eu.org</title>
+    <link rel="stylesheet" href="../css/style.css?v=2">
+    <style>
+        .about-wrap { max-width: 740px; margin: 0 auto; }
+        .about-hero {
+            text-align: center; margin-bottom: 40px;
+        }
+        .about-glow {
+            width: min(260px, 55vw); height: min(260px, 55vw);
+            border-radius: 50%;
+            margin: 0 auto 26px;
+            background: radial-gradient(circle, rgba(0,200,255,0.1) 0%, transparent 65%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: clamp(3.5rem, 9vw, 6rem);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        .about-content p {
+            font-size: 0.94rem; line-height: 1.85;
+            color: var(--text); margin-bottom: 16px;
+        }
+        .about-content .hl {
+            color: var(--cyan); font-weight: 600;
+        }
+
+        .mission {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px 24px; margin: 28px 0;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .mission h3 {
+            font-size: 1.2rem; letter-spacing: 0.1em;
+            color: var(--cyan); margin-bottom: 10px;
+        }
+        .mission p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; }
+
+        .faq { margin: 34px 0; }
+        .faq dt {
+            font-size: 0.95rem; font-weight: 700;
+            color: #fff; letter-spacing: 0.04em;
+            padding: 14px 0 6px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            cursor: default;
+        }
+        .faq dd {
+            font-size: 0.86rem; color: var(--text-dim);
+            line-height: 1.7; margin-left: 0;
+            padding-bottom: 8px; margin-bottom: 4px;
+        }
+
+        .tag-row {
+            display: flex; flex-wrap: wrap; gap: 10px;
+            justify-content: center; margin: 22px 0;
+        }
+        .tag {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.78rem; letter-spacing: 0.06em;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.03);
+            color: var(--text-dim);
+        }
+        .cta-row {
+            display: flex; flex-wrap: wrap; gap: 12px;
+            justify-content: center; margin: 30px 0 50px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <div class="page-wrap">
+        <div class="container section">
+            <div class="page-title anim-fade-up">
+                <h1><span lang="zh">关于</span><span lang="en">ABOUT</span></h1>
+                <p class="subtitle"><span lang="zh">ABOUT FLY2SUN</span><span lang="en">关于 Fly2Sun</span></p>
+                <div class="hr"></div>
+            </div>
+
+            <div class="about-wrap">
+
+                <div class="about-hero anim-fade-up">
+                    <div class="about-glow">🌌</div>
+                </div>
+
+                <div class="anim-fade-up about-content">
+                    <p style="text-align:center;">
+                        <span lang="zh"><span class="hl">Fly2Sun</span> · 奔赴太阳，拥抱星海。</span><span lang="en"><span class="hl">Fly2Sun</span> · Reach for the Sun, embrace the stars.</span>
+                    </p>
+
+                    <div class="mission">
+                        <h3><span lang="zh">🌟 我们的使命</span><span lang="en">🌟 Our Mission</span></h3>
+                        <p>
+                            <span lang="zh">让天文学变得触手可及。无论你是刚入门的好奇者，还是经验丰富的天文爱好者，这里都有为你准备的内容。<br>
+                            仰望星空是人类最原始的好奇，也是科技最前沿的边界。<br>
+                            <strong style="color:var(--cyan);">Ad Astra Per Aspera — 循此苦旅，以达星辰。</strong></span><span lang="en">Making astronomy accessible to everyone. Whether you're a curious beginner or an experienced enthusiast, there is something here for you.<br>
+                            Looking up at the stars is humanity's oldest curiosity and the frontier of modern science.<br>
+                            <strong style="color:var(--cyan);">Ad Astra Per Aspera — through hardship to the stars.</strong></span>
+                        </p>
+                    </div>
+
+                    <p>
+                        <span lang="zh">本站提供 <span class="hl">交互式太阳系模型</span>，以真实比例和轨道周期模拟八大行星的运行；
+                        涵盖 <span class="hl">深空天体图鉴</span>，精选 12 个著名星云、星系和星团并提供详细数据与观测指南；
+                        汇集 <span class="hl">全球天文资源</span>，从 NASA 到 ESA，从哈勃到韦伯，为你导航最好的天文学内容；
+                        编写 <span class="hl">观测指南</span>，从裸眼入门到进阶望远镜选购，帮助每一位爱好者开启探索之旅。</span><span lang="en">This site features an <span class="hl">interactive Solar System model</span> with true-to-scale orbits and orbital periods for all eight planets;
+                        a <span class="hl">Deep Sky Atlas</span> showcasing 12 famous nebulae, galaxies, and clusters with detailed data and observing guides;
+                        a curated <span class="hl">resource directory</span> spanning NASA, ESA, Hubble, and Webb — your guide to the best astronomy content;
+                        and an <span class="hl">Observing Guide</span> covering everything from naked-eye astronomy to telescope selection.</span>
+                    </p>
+
+                    <h3 style="color:#fff;letter-spacing:0.08em;margin:28px 0 12px;text-align:center;"><span lang="zh">技术栈</span><span lang="en">Tech Stack</span></h3>
+                    <div class="tag-row">
+                        <span class="tag">HTML5 Canvas</span>
+                        <span class="tag">CSS3 Animations</span>
+                        <span class="tag">Responsive Design</span>
+                        <span class="tag">Vanilla JavaScript</span>
+                        <span class="tag">GitHub Pages</span>
+                        <span class="tag">Open Source</span>
+                        <span class="tag">Static Site</span>
+                        <span class="tag">Zero Dependencies</span>
+                    </div>
+
+                    <!-- FAQ -->
+                    <div class="faq">
+                        <h3 style="color:#fff;letter-spacing:0.08em;margin-bottom:6px;"><span lang="zh">常见问题</span><span lang="en">FAQ</span></h3>
+                        <dl>
+                            <dt><span lang="zh">站点数据来源是什么？</span><span lang="en">Where does the data come from?</span></dt>
+                            <dd><span lang="zh">行星数据来自 NASA Solar System Exploration；深空天体数据来自 Messier Catalog、NGC 和 ESA。所有科学数据均标注来源。</span><span lang="en">Planetary data from NASA Solar System Exploration; deep-sky data from the Messier Catalog, NGC, and ESA. All scientific data is sourced and dated.</span></dd>
+
+                            <dt><span lang="zh">为什么选择纯静态网站？</span><span lang="en">Why a pure static site?</span></dt>
+                            <dd><span lang="zh">零依赖、加载快、部署简单。托管于 GitHub Pages，无需服务器成本，任何人均可 Fork 并搭建自己的天文站。</span><span lang="en">Zero dependencies, fast loading, simple deployment. Hosted on GitHub Pages with no server costs — anyone can fork and build their own astronomy site.</span></dd>
+
+                            <dt><span lang="zh">如何参与贡献？</span><span lang="en">How can I contribute?</span></dt>
+                            <dd><span lang="zh">项目完全开源。你可以在 GitHub 上提交 Issue 报告错误或提出建议，也可以 Fork 后提交 Pull Request 贡献代码或内容。</span><span lang="en">The project is fully open-source. Submit Issues to report bugs or suggest ideas, or fork and send Pull Requests with code or content contributions.</span></dd>
+
+                            <dt><span lang="zh">太阳系模型的比例准确吗？</span><span lang="en">Are the Solar System model proportions accurate?</span></dt>
+                            <dd><span lang="zh">行星大小比例和轨道周期按真实数据等比缩放。但轨道间距和行星体积因显示需要做了调整——如果完全按真实比例，内行星将几乎不可见。</span><span lang="en">Planet sizes and orbital periods are scaled to real data. However, orbital spacing and planet sizes are adjusted for display — at true scale, inner planets would be nearly invisible.</span></dd>
+
+                            <dt><span lang="zh">可以把这个网站翻译成其他语言吗？</span><span lang="en">Can I translate this site into other languages?</span></dt>
+                            <dd><span lang="zh">当然可以！欢迎 Fork 项目并创建多语言版本。我们非常乐意在友情链接中添加你的翻译站。</span><span lang="en">Absolutely! Fork the project and create a multilingual version. We\'d be happy to link to your translation.</span></dd>
+                        </dl>
+                    </div>
+
+                    <p style="text-align:center;margin-top:24px;">
+                        <span lang="zh">本项目开源托管于</span><span lang="en">Open-source, hosted on</span>
+                        <a href="https://github.com/miki-hunter/miki-hunter.github.io" target="_blank" rel="noopener">GitHub</a> ·
+                        欢迎 Star ⭐ · Fork · PR
+                    </p>
+
+                    <div class="cta-row">
+                        <a href="https://github.com/miki-hunter/miki-hunter.github.io" target="_blank" rel="noopener" class="btn btn-primary"><span lang="zh">GitHub 仓库</span><span lang="en">GitHub Repo</span></a>
+                        <a href="links.html" class="btn"><span lang="zh">友情链接</span><span lang="en">Links</span></a>
+                        <a href="../index.html" class="btn"><span lang="zh">返回首页</span><span lang="en">Home</span></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script src="../js/i18n.js?v=2"></script>
+    <script src="../js/components.js?v=2"></script>
+    <script src="../js/main.js?v=2"></script>
+</body>
+</html>

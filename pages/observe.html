@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fly2Sun 观测指南 — 天文观测入门，设备推荐，四季星空">
+    <title>观测指南 | Fly2Sun.eu.org</title>
+    <link rel="stylesheet" href="../css/style.css?v=2">
+    <style>
+        .guide-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 22px;
+        }
+        .guide-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 26px 22px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        .guide-card:hover {
+            border-color: var(--border-h);
+            box-shadow: 0 8px 32px rgba(0,200,255,0.06);
+        }
+        .guide-card .gc-icon {
+            font-size: 2.4rem; margin-bottom: 14px;
+        }
+        .guide-card h3 {
+            font-size: 1.1rem; letter-spacing: 0.06em;
+            color: var(--cyan); margin-bottom: 10px;
+        }
+        .guide-card p {
+            font-size: 0.85rem; color: var(--text-dim);
+            line-height: 1.7;
+        }
+        .guide-card ul {
+            list-style: disc; padding-left: 18px;
+            font-size: 0.84rem; color: var(--text-dim);
+            line-height: 1.8;
+        }
+        .guide-card ul li::marker { color: var(--cyan); }
+
+        .season-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+        .season-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px 18px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        .season-card:hover { border-color: var(--border-h); }
+        .season-card .sn { font-size: 2.5rem; margin-bottom: 8px; }
+        .season-card h4 {
+            font-size: 1rem; letter-spacing: 0.1em;
+            color: #fff; margin-bottom: 6px;
+        }
+        .season-card .st {
+            font-size: 0.72rem; color: var(--cyan);
+            letter-spacing: 0.06em; margin-bottom: 10px;
+        }
+        .season-card p {
+            font-size: 0.8rem; color: var(--text-dim);
+            line-height: 1.65;
+        }
+
+        .equip-table {
+            width: 100%; border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        .equip-table th {
+            text-align: left; padding: 12px 14px;
+            color: var(--cyan); letter-spacing: 0.06em;
+            font-weight: 600; font-size: 0.75rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .equip-table td {
+            padding: 12px 14px; color: var(--text-dim);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            line-height: 1.6;
+        }
+        .equip-table tr:hover td { background: rgba(255,255,255,0.015); }
+        .equip-table td:first-child { color: #fff; font-weight: 600; white-space: nowrap; }
+
+        .tips-list {
+            counter-reset: tips;
+        }
+        .tips-list li {
+            counter-increment: tips;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 0.88rem; color: var(--text);
+            line-height: 1.7;
+            display: flex; gap: 14px;
+            align-items: flex-start;
+        }
+        .tips-list li::before {
+            content: counter(tips);
+            flex-shrink: 0;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: rgba(0,200,255,0.1);
+            border: 1px solid var(--border);
+            color: var(--cyan);
+            font-size: 0.78rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+        }
+        @media (max-width: 480px) {
+            .equip-table { font-size: 0.75rem; }
+            .equip-table th, .equip-table td { padding: 8px 8px; }
+            .tips-list li { font-size: 0.82rem; }
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <div class="page-wrap">
+        <div class="container section">
+            <div class="page-title anim-fade-up">
+                <h1><span lang="zh">观测指南</span><span lang="en">OBSERVER'S HANDBOOK</span></h1>
+                <p class="subtitle"><span lang="zh">OBSERVER'S HANDBOOK</span><span lang="en">观测指南</span></p>
+                <div class="hr"></div>
+            </div>
+
+            <!-- Getting Started -->
+            <div class="section-header anim-fade-up" style="margin-top:20px;">
+                <h2><span lang="zh">入门第一步</span><span lang="en">First Steps</span></h2>
+                <div class="hr"></div>
+            </div>
+            <div class="guide-grid anim-fade-up">
+                <div class="guide-card">
+                    <div class="gc-icon">👀</div>
+                    <h3><span lang="zh">裸眼观测</span><span lang="en">Naked-Eye Observing</span></h3>
+                    <p><span lang="zh">不需要任何设备，你的眼睛就是最好的起点。学习辨认主要星座、追踪行星运动、观测流星雨和日月食。找一片远离城市灯光的暗空，让眼睛适应黑暗 20-30 分钟。</span><span lang="en">No equipment needed — your eyes are the best starting point. Learn to identify major constellations, track planetary motion, and observe meteor showers and eclipses. Find dark skies away from city lights and allow 20–30 minutes for dark adaptation.</span></p>
+                </div>
+                <div class="guide-card">
+                    <div class="gc-icon">🔭</div>
+                    <h3><span lang="zh">双筒望远镜</span><span lang="en">Binoculars</span></h3>
+                    <p><span lang="zh">7×50 或 10×50 双筒望远镜是入门神器——比大多数入门天文望远镜更便携、更易用。可以看清月球环形山、木星卫星、昴星团和猎户座大星云。</span><span lang="en">7×50 or 10×50 binoculars are the ideal beginner tool — more portable and easier to use than most entry-level telescopes. See lunar craters, Jupiter's moons, the Pleiades, and the Orion Nebula.</span></p>
+                </div>
+                <div class="guide-card">
+                    <div class="gc-icon">📱</div>
+                    <h3><span lang="zh">手机 App</span><span lang="en">Mobile Apps</span></h3>
+                    <p><span lang="zh">安装 Star Walk 2、Stellarium Mobile 或 SkyView 等应用。它们利用手机陀螺仪实现 AR 星空导航，帮你快速辨认星座和天体——但记得把屏幕亮度调到最低。</span><span lang="en">Install apps like Star Walk 2, Stellarium Mobile, or SkyView. They use your phone's gyroscope for AR sky navigation, helping you quickly identify constellations and objects — but remember to turn screen brightness to minimum.</span></p>
+                </div>
+            </div>
+
+            <!-- Equipment Guide -->
+            <div class="section-header anim-fade-up" style="margin-top:50px;">
+                <h2><span lang="zh">设备选择指南</span><span lang="en">Equipment Guide</span></h2>
+                <div class="hr"></div>
+            </div>
+            <div class="anim-fade-up" style="overflow-x:auto;">
+                <table class="equip-table">
+                    <thead>
+                        <tr><th><span lang="zh">设备类型</span><span lang="en">Type</span></th><th><span lang="zh">口径</span><span lang="en">Aperture</span></th><th><span lang="zh">适合对象</span><span lang="en">Best For</span></th><th><span lang="zh">预算</span><span lang="en">Budget</span></th><th><span lang="zh">优点</span><span lang="en">Pros</span></th><th><span lang="zh">局限</span><span lang="en">Limitations</span></th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span lang="zh">双筒望远镜</span><span lang="en">Binoculars</span></td><td>35-50mm</td><td><span lang="zh">所有入门者</span><span lang="en">All beginners</span></td><td>¥300-1,500</td><td><span lang="zh">便携、直观、视野宽</span><span lang="en">Portable, intuitive, wide FOV</span></td><td><span lang="zh">倍数有限、需手持或三脚架</span><span lang="en">Limited mag, needs hands/tripod</span></td>
+                        </tr>
+                        <tr>
+                            <td><span lang="zh">折射望远镜</span><span lang="en">Refractor</span></td><td>70-100mm</td><td><span lang="zh">行星 · 月球 · 双星</span><span lang="en">Planets, Moon, doubles</span></td><td>¥1,000-5,000</td><td><span lang="zh">成像锐利、免维护、便携</span><span lang="en">Sharp, no maintenance, portable</span></td><td><span lang="zh">口径有限、深空天体较暗</span><span lang="en">Limited aperture, faint DSOs</span></td>
+                        </tr>
+                        <tr>
+                            <td><span lang="zh">反射望远镜</span><span lang="en">Reflector</span></td><td>130-200mm</td><td><span lang="zh">深空天体 · 星云 · 星系</span><span lang="en">DSOs, nebulae, galaxies</span></td><td>¥2,000-8,000</td><td><span lang="zh">性价比高、口径大、无色差</span><span lang="en">Great value, large aperture, no CA</span></td><td><span lang="zh">需准直、体积大</span><span lang="en">Needs collimation, bulky</span></td>
+                        </tr>
+                        <tr>
+                            <td><span lang="zh">折反射望远镜</span><span lang="en">Compound</span></td><td>127-200mm</td><td><span lang="zh">全能型 · 行星+深空</span><span lang="en">All-round: planets + DSO</span></td><td>¥3,500-15,000</td><td><span lang="zh">紧凑、全能、像质好</span><span lang="en">Compact, versatile, excellent IQ</span></td><td><span lang="zh">价格偏高、冷却慢</span><span lang="en">Higher price, slow cooldown</span></td>
+                        </tr>
+                        <tr>
+                            <td><span lang="zh">DOB 道布森</span><span lang="en">Dobsonian</span></td><td>200-400mm</td><td><span lang="zh">深空目视发烧友</span><span lang="en">DSO visual enthusiast</span></td><td>¥3,000-20,000</td><td><span lang="zh">超大光圈、性价比之王</span><span lang="en">Massive aperture, best value</span></td><td><span lang="zh">笨重、无自动跟踪</span><span lang="en">Heavy, no tracking</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Seasons -->
+            <div class="section-header anim-fade-up" style="margin-top:50px;">
+                <h2><span lang="zh">四季星空亮点</span><span lang="en">Seasonal Highlights</span></h2>
+                <div class="hr"></div>
+            </div>
+            <div class="season-grid anim-fade-up">
+                <div class="season-card">
+                    <div class="sn">🌸</div>
+                    <h4><span lang="zh">春季</span><span lang="en">Spring</span></h4>
+                    <p class="st"><span lang="zh">3月 · 4月 · 5月</span><span lang="en">Mar · Apr · May</span></p>
+                    <p><span lang="zh">狮子座三重星系（M65/M66/NGC 3628）、涡状星系 M51、草帽星系 M104。北斗七星高悬，顺着手柄弧线找到大角星和角宿一。</span><span lang="en">The Leo Triplet (M65/M66/NGC 3628), Whirlpool Galaxy M51, Sombrero Galaxy M104. The Big Dipper hangs high — follow its handle's arc to Arcturus and Spica.</span></p>
+                </div>
+                <div class="season-card">
+                    <div class="sn">☀️</div>
+                    <h4><span lang="zh">夏季</span><span lang="en">Summer</span></h4>
+                    <p class="st"><span lang="zh">6月 · 7月 · 8月</span><span lang="en">Jun · Jul · Aug</span></p>
+                    <p><span lang="zh">夏季大三角（织女星·牛郎星·天津四）、银河最亮的核心区域、环状星云 M57、鹰状星云 M16。天蝎座与人马座之间的银心最为壮观。</span><span lang="en">The Summer Triangle (Vega, Altair, Deneb), the Milky Way's brightest core region, Ring Nebula M57, Eagle Nebula M16. The galactic center between Scorpius and Sagittarius is spectacular.</span></p>
+                </div>
+                <div class="season-card">
+                    <div class="sn">🍂</div>
+                    <h4><span lang="zh">秋季</span><span lang="en">Autumn</span></h4>
+                    <p class="st"><span lang="zh">9月 · 10月 · 11月</span><span lang="en">Sep · Oct · Nov</span></p>
+                    <p><span lang="zh">仙女座星系 M31（肉眼可见的最远天体）、三角座星系 M33。飞马座四边形是秋季星空的标志。仙后座的 W 形指引北方。</span><span lang="en">Andromeda Galaxy M31 (farthest naked-eye object), Triangulum Galaxy M33. The Great Square of Pegasus marks autumn skies. Cassiopeia's W points north.</span></p>
+                </div>
+                <div class="season-card">
+                    <div class="sn">❄️</div>
+                    <h4><span lang="zh">冬季</span><span lang="en">Winter</span></h4>
+                    <p class="st"><span lang="zh">12月 · 1月 · 2月</span><span lang="en">Dec · Jan · Feb</span></p>
+                    <p><span lang="zh">冬季六边形（参宿七·五车二·北河三·南河三·天狼星·毕宿五）、猎户座大星云 M42、昴星团 M45、蟹状星云 M1。全年最灿烂的星空。</span><span lang="en">The Winter Hexagon (Rigel, Capella, Pollux, Procyon, Sirius, Aldebaran), Orion Nebula M42, Pleiades M45, Crab Nebula M1. The most brilliant skies of the year.</span></p>
+                </div>
+            </div>
+
+            <!-- Pro Tips -->
+            <div class="section-header anim-fade-up" style="margin-top:50px;">
+                <h2><span lang="zh">观测进阶技巧</span><span lang="en">Advanced Techniques</span></h2>
+                <div class="hr"></div>
+            </div>
+            <ol class="tips-list anim-fade-up" style="max-width:720px;margin:0 auto;">
+                <li><span><span lang="zh"><strong style="color:var(--cyan);">暗适应：</strong>离开强光后，人眼需要 20-30 分钟才能完全适应黑暗。使用红色头灯或手电筒保护夜视力，避免白光。</span><span lang="en"><strong style="color:var(--cyan);">Dark Adaptation: </strong>After leaving bright lights, your eyes need 20–30 minutes to fully adapt to darkness. Use a red headlamp or flashlight to preserve night vision — avoid white light.</span></span></li>
+                <li><span><span lang="zh"><strong style="color:var(--cyan);">侧视法：</strong>人眼视网膜中央（锥细胞）对暗弱光不敏感。看暗弱天体时，稍微侧眼看——让光线落在杆细胞更密集的周边区域，天体亮度可提升 2-3 倍。</span><span lang="en"><strong style="color:var(--cyan);">Averted Vision: </strong>The center of the retina (cones) is insensitive to faint light. When observing faint objects, look slightly to the side — this places light on rod-dense peripheral areas, boosting object brightness 2–3×.</span></span></li>
+                <li><span><span lang="zh"><strong style="color:var(--cyan);">选择暗空：</strong>使用光污染地图（如 lightpollutionmap.info）寻找附近最暗的观测地点。Bortle 4 级以下的天空才能看到银河细节。</span><span lang="en"><strong style="color:var(--cyan);">Choose Dark Skies: </strong>Use light pollution maps (e.g., lightpollutionmap.info) to find the darkest observing sites near you. Bortle class 4 or better is needed to see Milky Way detail.</span></span></li>
+                <li><span><span lang="zh"><strong style="color:var(--cyan);">视宁度与透明度：</strong>大气稳定性（视宁度）决定行星细节的清晰度；大气透明度决定深空天体的可见度。高湿度、大风或冷锋过境后视宁度通常较差。</span><span lang="en"><strong style="color:var(--cyan);">Seeing &amp; Transparency: </strong>Atmospheric stability (seeing) determines planetary detail clarity; transparency determines deep-sky object visibility. High humidity, strong winds, or post cold-front conditions usually mean poor seeing.</span></span></li>
+                <li><span><span lang="zh"><strong style="color:var(--cyan);">滤镜是神器：</strong>UHC/OIII 滤镜可以大幅提升发射星云的对比度；月亮滤镜降低月光亮度保护眼睛；太阳观测必须使用专业巴德膜或日珥镜。</span><span lang="en"><strong style="color:var(--cyan);">Filters Are Magic: </strong>UHC/OIII filters dramatically boost emission nebula contrast. Moon filters reduce glare to protect your eyes. Solar observing REQUIRES proper Baader film or H-alpha telescopes.</span></span></li>
+                <li><span><span lang="zh"><strong style="color:var(--cyan);">做观测记录：</strong>准备一本观测日志，记录日期、时间、地点、天气、设备和观测到的天体。这不仅帮助你跟踪进度，也是天文探索最珍贵的回忆。</span><span lang="en"><strong style="color:var(--cyan);">Keep an Observing Log: </strong>Maintain a logbook — record date, time, location, weather, equipment, and objects observed. This not only tracks your progress but becomes your most treasured astronomy memory.</span></span></li>
+            </ol>
+
+            <p style="text-align:center;margin-top:34px;color:var(--text-muted);font-size:0.8rem;">
+                <span lang="zh">更多资源请访问 <a href="links.html">友情链接</a> 中的工具与社区页面</span><span lang="en">For more resources visit <a href="links.html">Links</a> — tools and community pages</span>
+            </p>
+
+        </div>
+    </div>
+
+
+    <script src="../js/i18n.js?v=2"></script>
+    <script src="../js/components.js?v=2"></script>
+    <script src="../js/main.js?v=2"></script>
+</body>
+</html>

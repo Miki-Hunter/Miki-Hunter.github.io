@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fly2Sun 友情链接 — 精选天文网站，航天机构、望远镜、教育、社区">
+    <title>友情链接 | Fly2Sun.eu.org</title>
+    <link rel="stylesheet" href="../css/style.css?v=2">
+    <style>
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+        .lk {
+            display: flex; align-items: center; gap: 14px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            text-decoration: none; color: var(--text);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        .lk:hover {
+            border-color: var(--border-h);
+            box-shadow: 0 4px 28px rgba(0,200,255,0.12);
+            transform: translateX(5px);
+            color: #fff;
+            text-decoration: none;
+        }
+        .lk .lk-icon {
+            width: 46px; height: 46px;
+            border-radius: 10px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+            background: rgba(0,200,255,0.07);
+            border: 1px solid rgba(0,200,255,0.15);
+        }
+        .lk .lk-info { min-width: 0; }
+        .lk .lk-info h4 {
+            font-size: 0.95rem; letter-spacing: 0.04em;
+            margin-bottom: 2px;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .lk .lk-info span {
+            font-size: 0.73rem; color: var(--text-dim);
+        }
+        .lk .lk-arrow {
+            margin-left: auto; color: var(--cyan);
+            opacity: 0; transition: opacity 0.3s;
+            font-size: 1.1rem; flex-shrink: 0;
+        }
+        .lk:hover .lk-arrow { opacity: 1; }
+
+        .link-section { margin-bottom: 48px; }
+        .link-section h3 {
+            font-size: 1.05rem; letter-spacing: 0.12em;
+            color: var(--cyan); margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .link-section .sec-desc {
+            font-size: 0.8rem; color: var(--text-muted);
+            margin: -8px 0 16px;
+            letter-spacing: 0.04em;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            background: rgba(0,200,255,0.1);
+            color: var(--cyan);
+            border: 1px solid rgba(0,200,255,0.2);
+        }
+        @media (max-width: 480px) {
+            .link-grid { grid-template-columns: 1fr; }
+            .lk { padding: 14px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <div class="page-wrap">
+        <div class="container section">
+            <div class="page-title anim-fade-up">
+                <h1><span lang="zh">资源导航</span><span lang="en">COSMIC DIRECTORY</span></h1>
+                <p class="subtitle"><span lang="zh">COSMIC DIRECTORY</span><span lang="en">资源导航</span></p>
+                <div class="hr"></div>
+                <p style="color:var(--text-dim);font-size:0.85rem;margin-top:10px;">
+                    <span lang="zh">精选全球优质天文资源，一站导航浩瀚宇宙</span><span lang="en">Curated global astronomy resources — your one-stop gateway to the cosmos</span>
+                </p>
+            </div>
+
+            <!-- Space Agencies -->
+            <div class="link-section anim-fade-up">
+                <h3><span lang="zh">🚀 航天机构</span><span lang="en">🚀 Space Agencies</span></h3>
+                <p class="sec-desc"><span lang="zh">全球主要航天机构官网，获取最新任务动态和官方科学数据</span><span lang="en">Official websites of major space agencies — latest mission updates and scientific data</span></p>
+                <div class="link-grid">
+                    <a href="https://www.nasa.gov" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🚀</div>
+                        <div class="lk-info"><h4>NASA</h4><span><span lang="zh">美国国家航空航天局</span><span lang="en">National Aeronautics and Space Administration</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://www.esa.int" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🛰️</div>
+                        <div class="lk-info"><h4>ESA</h4><span><span lang="zh">欧洲空间局</span><span lang="en">European Space Agency</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://www.cnsa.gov.cn" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🇨🇳</div>
+                        <div class="lk-info"><h4>CNSA</h4><span><span lang="zh">中国国家航天局</span><span lang="en">China National Space Administration</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://global.jaxa.jp" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🗾</div>
+                        <div class="lk-info"><h4>JAXA</h4><span><span lang="zh">日本宇宙航空研究开发机构</span><span lang="en">Japan Aerospace Exploration Agency</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://www.spacex.com" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🛸</div>
+                        <div class="lk-info"><h4>SpaceX</h4><span><span lang="zh">太空探索技术公司</span><span lang="en">Space Exploration Technologies Corp.</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://www.roscosmos.ru" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🚀</div>
+                        <div class="lk-info"><h4>Roscosmos</h4><span><span lang="zh">俄罗斯国家航天集团公司</span><span lang="en">Roscosmos State Corporation</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Telescopes -->
+            <div class="link-section anim-fade-up">
+                <h3><span lang="zh">🔭 空间望远镜与天文台</span><span lang="en">🔭 Space Telescopes &amp; Observatories</span></h3>
+                <p class="sec-desc"><span lang="zh">从哈勃到韦伯，从钱德拉到中国天眼——人类探索宇宙的眼睛</span><span lang="en">From Hubble to Webb, from Chandra to FAST — humanity's eyes on the universe</span></p>
+                <div class="link-grid">
+                    <a href="https://hubblesite.org" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🔭</div>
+                        <div class="lk-info"><h4>HubbleSite</h4><span><span lang="zh">哈勃空间望远镜 · 1990-至今</span><span lang="en">Hubble Space Telescope · 1990–present</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://webbtelescope.org" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">📡</div>
+                        <div class="lk-info"><h4>Webb Telescope</h4><span><span lang="zh">詹姆斯·韦伯空间望远镜</span><span lang="en">James Webb Space Telescope</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://www.chandra.harvard.edu" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🛰️</div>
+                        <div class="lk-info"><h4>Chandra X-ray</h4><span><span lang="zh">钱德拉 X 射线天文台</span><span lang="en">Chandra X-ray Observatory</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://www.eso.org" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🏔️</div>
+                        <div class="lk-info"><h4>ESO</h4><span><span lang="zh">欧洲南方天文台 · VLT/ALMA</span><span lang="en">European Southern Observatory · VLT/ALMA</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://fast.bao.ac.cn" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">📡</div>
+                        <div class="lk-info"><h4>FAST <span lang="zh">天眼</span><span lang="en"></span></h4><span><span lang="zh">500 米口径球面射电望远镜</span><span lang="en">500-meter Aperture Spherical Telescope</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://www.nao.cas.cn" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🏛️</div>
+                        <div class="lk-info"><h4><span lang="zh">中国科学院</span><span lang="en">CAS</span></h4><span><span lang="zh">国家天文台 · 紫金山天文台</span><span lang="en">National Astronomical Obs. · Purple Mountain Obs.</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Media & News -->
+            <div class="link-section anim-fade-up">
+                <h3><span lang="zh">📖 天文媒体与资讯</span><span lang="en">📖 Astronomy Media &amp; News</span></h3>
+                <p class="sec-desc"><span lang="zh">关注最新天文发现、航天任务报道和科普文章</span><span lang="en">Latest astronomy discoveries, mission coverage, and popular science articles</span></p>
+                <div class="link-grid">
+                    <a href="https://apod.nasa.gov" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">📸</div>
+                        <div class="lk-info"><h4>APOD <span class="badge"><span lang="zh">推荐</span><span lang="en">Featured</span></span></h4><span><span lang="zh">NASA 每日天文一图</span><span lang="en">NASA Astronomy Picture of the Day</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://www.space.com" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🌍</div>
+                        <div class="lk-info"><h4>Space.com</h4><span><span lang="zh">全球知名天文科技媒体</span><span lang="en">Global astronomy &amp; space news</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://www.skyatnightmagazine.com" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">📖</div>
+                        <div class="lk-info"><h4>BBC Sky at Night</h4><span><span lang="zh">英国天文观测杂志</span><span lang="en">UK astronomy observing magazine</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://www.universetoday.com" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🌌</div>
+                        <div class="lk-info"><h4>Universe Today</h4><span><span lang="zh">天文科普新闻网站</span><span lang="en">Astronomy &amp; space news</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://earthsky.org" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🌅</div>
+                        <div class="lk-info"><h4>EarthSky</h4><span><span lang="zh">天文事件预报与科普</span><span lang="en">Astronomy events &amp; skywatching</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://skyandtelescope.org" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🔭</div>
+                        <div class="lk-info"><h4>Sky &amp; Telescope</h4><span><span lang="zh">美国权威天文杂志</span><span lang="en">Leading US astronomy magazine</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tools -->
+            <div class="link-section anim-fade-up">
+                <h3><span lang="zh">🛠️ 工具与可视化</span><span lang="en">🛠️ Tools &amp; Visualization</span></h3>
+                <p class="sec-desc"><span lang="zh">在线天文工具、星图软件和 3D 可视化</span><span lang="en">Online astronomy tools, star chart software, and 3D visualization</span></p>
+                <div class="link-grid">
+                    <a href="https://stellarium.org" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🌟</div>
+                        <div class="lk-info"><h4>Stellarium</h4><span><span lang="zh">开源天文星图软件</span><span lang="en">Open-source planetarium software</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://eyes.nasa.gov" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">👁️</div>
+                        <div class="lk-info"><h4>NASA's Eyes</h4><span><span lang="zh">3D 太阳系实时可视化</span><span lang="en">3D real-time Solar System visualization</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://solarsystem.nasa.gov" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">☀️</div>
+                        <div class="lk-info"><h4>NASA Solar System</h4><span><span lang="zh">太阳系探索互动专题</span><span lang="en">Solar System exploration interactive</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://exoplanet.eu" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🪐</div>
+                        <div class="lk-info"><h4>Exoplanet Encyclopaedia</h4><span><span lang="zh">系外行星目录数据库</span><span lang="en">Exoplanet catalogue database</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://www.heavens-above.com" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🛰️</div>
+                        <div class="lk-info"><h4>Heavens-Above</h4><span><span lang="zh">卫星过境 · 铱星闪光预报</span><span lang="en">Satellite passes &amp; flare predictions</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://clearoutside.com" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">☁️</div>
+                        <div class="lk-info"><h4>Clear Outside</h4><span><span lang="zh">天文观测天气预报</span><span lang="en">Astronomy weather forecasts</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Communities -->
+            <div class="link-section anim-fade-up">
+                <h3><span lang="zh">👥 天文社区与组织</span><span lang="en">👥 Astronomy Communities &amp; Organizations</span></h3>
+                <p class="sec-desc"><span lang="zh">连接全球天文爱好者</span><span lang="en">Connecting astronomy enthusiasts worldwide</span></p>
+                <div class="link-grid">
+                    <a href="https://www.planetary.org" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🌠</div>
+                        <div class="lk-info"><h4>The Planetary Society</h4><span><span lang="zh">国际行星探索协会（比尔·奈）</span><span lang="en">International planetary exploration society (Bill Nye)</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://www.iau.org" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">🌐</div>
+                        <div class="lk-info"><h4>IAU</h4><span><span lang="zh">国际天文学联合会</span><span lang="en">International Astronomical Union</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://www.cloudynights.com" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">💬</div>
+                        <div class="lk-info"><h4>Cloudy Nights</h4><span><span lang="zh">全球最大业余天文论坛</span><span lang="en">World's largest amateur astronomy forum</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                    <a href="https://www.astronomy.com" target="_blank" rel="noopener" class="lk">
+                        <div class="lk-icon">📚</div>
+                        <div class="lk-info"><h4>Astronomy Magazine</h4><span><span lang="zh">美国天文爱好者杂志</span><span lang="en">US astronomy enthusiast magazine</span></span></div>
+                        <span class="lk-arrow">→</span>
+                    </a>
+                </div>
+            </div>
+
+            <p style="text-align:center;margin-top:24px;color:var(--text-muted);font-size:0.8rem;">
+                <span lang="zh">想推荐天文网站加入友链？欢迎通过 <a href="https://github.com/miki-hunter/miki-hunter.github.io" target="_blank" rel="noopener">GitHub Issues</a> 告诉我们</span><span lang="en">Want to recommend an astronomy site? Let us know via <a href="https://github.com/miki-hunter/miki-hunter.github.io" target="_blank" rel="noopener">GitHub Issues</a></span>
+            </p>
+
+        </div>
+    </div>
+
+
+    <script src="../js/i18n.js?v=2"></script>
+    <script src="../js/components.js?v=2"></script>
+    <script src="../js/main.js?v=2"></script>
+</body>
+</html>

@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fly2Sun - 奔赴星海，交互式太阳系探索、深空天体图鉴、天文知识百科">
+    <title>Fly2Sun.eu.org | 奔赴星海</title>
+    <link rel="stylesheet" href="css/style.css?v=2">
+    <style>
+        /* ===== HERO SOLAR SYSTEM ===== */
+        .hero {
+            position: relative; z-index: 2;
+            min-height: calc(100vh - var(--nav-h));
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .hero-glow {
+            position: absolute;
+            width: min(400px, 70vw); height: min(400px, 70vw);
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,180,255,0.05) 0%, transparent 70%);
+            pointer-events: none;
+            animation: pulse 5s ease-in-out infinite;
+        }
+        .hero-title { text-align: center; position: relative; z-index: 1; }
+        .hero-title h1 {
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 900; letter-spacing: 0.1em;
+            color: #fff;
+            text-shadow: 0 0 10px var(--cyan), 0 0 40px var(--cyan), 0 0 80px rgba(0,220,255,0.45);
+            animation: glitch 5s ease-in-out infinite;
+        }
+        @keyframes glitch {
+            0%,88%,100% { transform: skew(0); }
+            90% { transform: skew(2deg, 0.4deg); }
+            92% { transform: skew(-1.5deg, -0.2deg); }
+            94% { transform: skew(0.8deg); }
+            96% { transform: skew(0); }
+        }
+        .hero-title .sub {
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            letter-spacing: 0.45em; color: var(--cyan);
+            margin-top: 8px; opacity: 0.85;
+            text-shadow: 0 0 12px rgba(0,220,255,0.4);
+        }
+        .hero-title .tag {
+            font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+            letter-spacing: 0.2em; color: var(--text-dim);
+            margin-top: 6px;
+        }
+
+        /* Solar wrapper */
+        .solar-wrap {
+            position: relative;
+            width: min(88vw, 660px);
+            height: min(88vw, 660px);
+            margin: 30px auto 0;
+            z-index: 1;
+        }
+        #asteroidCanvas {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; z-index: 3;
+        }
+
+        /* Sun */
+        .sun {
+            position: absolute; top: 50%; left: 50%;
+            width: min(90px, 14vw); height: min(90px, 14vw);
+            border-radius: 50%;
+            background: radial-gradient(circle at 38% 38%, #fffde0, #ffc107 28%, #ff6d00 65%, #b83a00);
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 30px #ffb300, 0 0 70px #ff8f00, 0 0 130px rgba(255,100,0,0.5), 0 0 220px rgba(255,80,0,0.22);
+            z-index: 5; cursor: pointer;
+            animation: sunBreathe 3.5s ease-in-out infinite alternate;
+        }
+        @keyframes sunBreathe {
+            from { box-shadow: 0 0 26px #ffb300, 0 0 60px #ff8f00, 0 0 110px rgba(255,100,0,0.45); }
+            to   { box-shadow: 0 0 36px #ffcc00, 0 0 85px #ffa000, 0 0 150px rgba(255,130,0,0.6), 0 0 250px rgba(255,80,0,0.28); }
+        }
+        .sun:hover { filter: brightness(1.2); }
+
+        .corona {
+            position: absolute; top: 50%; left: 50%;
+            width: min(130px, 20vw); height: min(130px, 20vw);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgba(255,180,50,0.22);
+            box-shadow: inset 0 0 40px rgba(255,150,0,0.08), 0 0 50px rgba(255,150,0,0.12);
+            z-index: 4; pointer-events: none;
+            animation: coronaSpin 22s linear infinite;
+        }
+        @keyframes coronaSpin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to   { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        .corona::after {
+            content: '';
+            position: absolute; top: -10px; left: -10px;
+            right: -10px; bottom: -10px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,200,80,0.09);
+            animation: coronaOut 2.5s ease-in-out infinite alternate;
+        }
+        @keyframes coronaOut {
+            from { transform: scale(1); opacity: 0.35; }
+            to   { transform: scale(1.1); opacity: 0.85; }
+        }
+
+        /* Orbits */
+        .orbit-ring {
+            position: absolute; top: 50%; left: 50%;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid rgba(255,255,255,0.06);
+            pointer-events: none;
+        }
+        .orbit-ring.hl { border-color: rgba(0,200,255,0.16); }
+
+        /* Orbiter */
+        .orbiter {
+            position: absolute; top: 50%; left: 50%;
+            pointer-events: none;
+            transform-origin: 0 0;
+        }
+        .planet {
+            position: absolute; top: 0; left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            cursor: pointer; pointer-events: auto;
+            transition: filter 0.25s;
+        }
+        .planet:hover { filter: brightness(1.7) drop-shadow(0 0 6px currentColor); z-index: 20; }
+        .planet-label {
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%; transform: translateX(-50%);
+            font-size: clamp(8px, 1.2vw, 10px);
+            color: rgba(255,255,255,0.78);
+            white-space: nowrap; pointer-events: none;
+            letter-spacing: 0.05em;
+            text-shadow: 0 0 8px rgba(0,0,0,0.85), 0 0 3px rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.32);
+            padding: 1px 5px; border-radius: 3px;
+        }
+
+        /* Planet sizes — responsive via clamp */
+        .p-mercury { width:7px;height:7px; background:#b8b8b8; box-shadow:0 0 5px #ccc; }
+        .p-venus   { width:15px;height:15px; background:radial-gradient(circle at 35% 35%,#f0d890,#c8a44a); box-shadow:0 0 10px #e8c87a; }
+        .p-earth   { width:16px;height:16px; background:radial-gradient(circle at 35% 35%,#7cc8f8,#1a5fb4 60%,#0a3070); box-shadow:0 0 12px #4a90e2; }
+        .p-mars    { width:9px;height:9px; background:radial-gradient(circle at 35% 35%,#e88870,#b84020); box-shadow:0 0 6px #d45c3a; }
+        .p-jupiter { width:45px;height:45px; background:radial-gradient(circle at 40% 38%,#f8e8c0,#d4a86a 35%,#b07848 55%,#8a5a38 80%,#c09050 95%); box-shadow:0 0 16px #c8956c; }
+        .p-saturn  { width:38px;height:38px; background:radial-gradient(circle at 40% 38%,#faf0c8,#e8cc88 40%,#c8a860 75%); box-shadow:0 0 13px #f0d898; }
+        .p-saturn::after {
+            content:''; position:absolute; top:50%;left:50%;
+            width:56px;height:12px;
+            border:2.5px solid rgba(240,216,152,0.5);
+            border-radius:50%;
+            transform:translate(-50%,-50%) rotate(20deg);
+            pointer-events:none;
+        }
+        .p-uranus  { width:22px;height:22px; background:radial-gradient(circle at 38% 38%,#b8f0f0,#68c8d8); box-shadow:0 0 10px #8ed6e0; }
+        .p-neptune { width:21px;height:21px; background:radial-gradient(circle at 38% 38%,#8898f0,#3050c0); box-shadow:0 0 10px #4b70dd; }
+
+        /* Orbital periods */
+        .orb-mercury { animation: revolve 2.4s linear infinite; }
+        .orb-venus   { animation: revolve 6.2s linear infinite; }
+        .orb-earth   { animation: revolve 10s linear infinite; }
+        .orb-mars    { animation: revolve 18.8s linear infinite; }
+        .orb-jupiter { animation: revolve 36s linear infinite; }
+        .orb-saturn  { animation: revolve 52s linear infinite; }
+        .orb-uranus  { animation: revolve 72s linear infinite; }
+        .orb-neptune { animation: revolve 95s linear infinite; }
+        @keyframes revolve {
+            from { transform: rotate(0deg); }
+            to   { transform: rotate(360deg); }
+        }
+
+        /* Moon */
+        .moon-orbiter {
+            position: absolute; top: 0; left: 50%;
+            width: 24px; height: 24px;
+            transform: translate(-50%, -50%);
+            animation: moonRevolve 1.8s linear infinite;
+            pointer-events: none;
+        }
+        .moon-dot {
+            position: absolute; top: 0; left: 50%;
+            width: 4px; height: 4px;
+            background: #ddd; border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 3px #fff;
+        }
+        @keyframes moonRevolve {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to   { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Scroll hint */
+        .scroll-hint {
+            margin-top: 10px;
+            display: flex; flex-direction: column; align-items: center;
+            gap: 5px; color: rgba(255,255,255,0.3);
+            font-size: 0.7rem; letter-spacing: 0.25em;
+            animation: float 2.2s ease-in-out infinite;
+        }
+        .scroll-hint .chev {
+            width: 18px; height: 18px;
+            border-right: 2px solid rgba(255,255,255,0.3);
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            transform: rotate(45deg);
+        }
+
+        /* Feature cards on home */
+        .home-features { position: relative; z-index: 2; }
+        .feat-card {
+            position: relative;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px 22px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        .feat-card:hover {
+            border-color: var(--border-h);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 36px rgba(0,200,255,0.06);
+        }
+        .feat-card .fc-icon { font-size: 2.2rem; margin-bottom: 12px; }
+        .feat-card h3 {
+            font-size: 1.1rem; letter-spacing: 0.06em;
+            color: var(--cyan); margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(0,220,255,0.25);
+        }
+        .feat-card p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.65; }
+        .feat-card .fc-icon { text-shadow: 0 0 12px rgba(255,255,255,0.2); }
+
+        /* Quick links strip */
+        .quick-links {
+            display: flex; flex-wrap: wrap; gap: 12px;
+            justify-content: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero { min-height: auto; padding: 20px 12px 36px; }
+            .solar-wrap { margin: 12px auto 0; }
+            .hero-title h1 { font-size: clamp(2rem, 7vw, 3.5rem); }
+            .hero-title .sub { letter-spacing: 0.3em; }
+            .p-jupiter { width: 28px; height: 28px; }
+            .p-saturn  { width: 24px; height: 24px; }
+            .p-saturn::after { width: 36px; height: 8px; border-width: 2px; }
+            .p-uranus  { width: 14px; height: 14px; }
+            .p-neptune { width: 13px; height: 13px; }
+            .p-earth   { width: 14px; height: 14px; }
+            .p-venus   { width: 13px; height: 13px; }
+            .p-mars    { width: 8px; height: 8px; }
+            .planet-label { font-size: 8px; padding: 1px 4px; }
+            .feat-card { padding: 20px 14px; }
+            .scroll-hint { margin-top: 6px; font-size: 0.65rem; }
+        }
+        @media (max-width: 480px) {
+            .hero { padding: 16px 8px 30px; }
+            .solar-wrap { width: 94vw; height: 94vw; margin: 8px auto 0; }
+            .hero-title h1 { font-size: clamp(1.6rem, 6vw, 2.4rem); letter-spacing: 0.06em; }
+            .hero-title .sub { font-size: 0.8rem; letter-spacing: 0.2em; }
+            .hero-title .tag { font-size: 0.7rem; letter-spacing: 0.12em; }
+            .p-jupiter { width: 20px; height: 20px; }
+            .p-saturn  { width: 18px; height: 18px; }
+            .p-saturn::after { width: 28px; height: 6px; border-width: 1.5px; }
+            .p-uranus  { width: 11px; height: 11px; }
+            .p-neptune { width: 10px; height: 10px; }
+            .p-earth   { width: 11px; height: 11px; }
+            .p-venus   { width: 10px; height: 10px; }
+            .p-mars    { width: 6px; height: 6px; }
+            .p-mercury { width: 5px; height: 5px; }
+            .planet-label { font-size: 7px; padding: 0 3px; bottom: calc(100% + 4px); }
+            .feat-card { padding: 16px 12px; }
+            .feat-card h3 { font-size: 0.95rem; }
+            .feat-card p { font-size: 0.78rem; line-height: 1.5; }
+            .feat-card .fc-icon { font-size: 1.6rem; margin-bottom: 8px; }
+            .scroll-hint { font-size: 0.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrap">
+        <!-- ===== HERO ===== -->
+        <div class="hero">
+            <div class="hero-glow"></div>
+            <div class="hero-title">
+                <h1 data-i18n="nav.logo">Fly2Sun</h1>
+                <p class="sub" data-i18n="home.subtitle">奔 赴 星 海</p>
+                <p class="tag" data-i18n="home.tagline">Explore The Cosmos · 探索宇宙的无限可能</p>
+            </div>
+
+            <!-- Solar System -->
+            <div class="solar-wrap" id="solarWrap">
+                <canvas id="asteroidCanvas"></canvas>
+
+                <div class="sun" data-i18n-title="planet.tip.sun"></div>
+                <div class="corona"></div>
+
+                <!-- Mercury r=60 -->
+                <div class="orbit-ring" style="width:18.2%;height:18.2%;"></div>
+                <div class="orbiter orb-mercury" style="width:18.2%;height:18.2%;">
+                    <div class="planet p-mercury" data-i18n-title="planet.tip.mercury"><span class="planet-label" data-i18n="planet.label.mercury">水星</span></div>
+                </div>
+
+                <!-- Venus r=82 -->
+                <div class="orbit-ring" style="width:24.8%;height:24.8%;"></div>
+                <div class="orbiter orb-venus" style="width:24.8%;height:24.8%;">
+                    <div class="planet p-venus" data-i18n-title="planet.tip.venus"><span class="planet-label" data-i18n="planet.label.venus">金星</span></div>
+                </div>
+
+                <!-- Earth r=108 -->
+                <div class="orbit-ring hl" style="width:32.7%;height:32.7%;"></div>
+                <div class="orbiter orb-earth" style="width:32.7%;height:32.7%;">
+                    <div class="planet p-earth" data-i18n-title="planet.tip.earth"><span class="planet-label" data-i18n="planet.label.earth">地球</span></div>
+                    <div class="moon-orbiter"><div class="moon-dot"></div></div>
+                </div>
+
+                <!-- Mars r=136 -->
+                <div class="orbit-ring" style="width:41.2%;height:41.2%;"></div>
+                <div class="orbiter orb-mars" style="width:41.2%;height:41.2%;">
+                    <div class="planet p-mars" data-i18n-title="planet.tip.mars"><span class="planet-label" data-i18n="planet.label.mars">火星</span></div>
+                </div>
+
+                <!-- Asteroid Belt (canvas) -->
+
+                <!-- Jupiter r=180 -->
+                <div class="orbit-ring" style="width:54.5%;height:54.5%;"></div>
+                <div class="orbiter orb-jupiter" style="width:54.5%;height:54.5%;">
+                    <div class="planet p-jupiter" data-i18n-title="planet.tip.jupiter"><span class="planet-label" data-i18n="planet.label.jupiter">木星</span></div>
+                </div>
+
+                <!-- Saturn r=222 -->
+                <div class="orbit-ring hl" style="width:67.3%;height:67.3%;"></div>
+                <div class="orbiter orb-saturn" style="width:67.3%;height:67.3%;">
+                    <div class="planet p-saturn" data-i18n-title="planet.tip.saturn"><span class="planet-label" data-i18n="planet.label.saturn">土星</span></div>
+                </div>
+
+                <!-- Uranus r=260 -->
+                <div class="orbit-ring" style="width:78.8%;height:78.8%;"></div>
+                <div class="orbiter orb-uranus" style="width:78.8%;height:78.8%;">
+                    <div class="planet p-uranus" data-i18n-title="planet.tip.uranus"><span class="planet-label" data-i18n="planet.label.uranus">天王星</span></div>
+                </div>
+
+                <!-- Neptune r=296 -->
+                <div class="orbit-ring" style="width:89.7%;height:89.7%;"></div>
+                <div class="orbiter orb-neptune" style="width:89.7%;height:89.7%;">
+                    <div class="planet p-neptune" data-i18n-title="planet.tip.neptune"><span class="planet-label" data-i18n="planet.label.neptune">海王星</span></div>
+                </div>
+            </div>
+
+            <div class="scroll-hint">
+                <span data-i18n="home.scroll">SCROLL</span>
+                <div class="chev"></div>
+            </div>
+        </div>
+
+        <!-- ===== FEATURES ===== -->
+        <section class="section home-features">
+            <div class="container">
+                <div class="section-header anim-fade-up">
+                    <h2 data-i18n="home.sectionTitle">探 索 之 旅</h2>
+                    <div class="hr"></div>
+                </div>
+                <div class="grid-3 anim-fade-up">
+                    <a href="pages/planets.html" class="feat-card card-shimmer" style="text-decoration:none;color:inherit;">
+                        <div class="fc-icon">🪐</div>
+                        <h3 data-i18n="home.feat1.title">行星探索 →</h3>
+                        <p data-i18n="home.feat1.desc">八大行星详情面板，真实比例与轨道周期，深入每颗行星的科学数据与趣味冷知识。</p>
+                    </a>
+                    <a href="pages/gallery.html" class="feat-card card-shimmer" style="text-decoration:none;color:inherit;">
+                        <div class="fc-icon">🌌</div>
+                        <h3 data-i18n="home.feat2.title">星空画廊 →</h3>
+                        <p data-i18n="home.feat2.desc">12 个著名深空天体图鉴，点击查看详情——星云、星系、星团，含观测指南与科学数据。</p>
+                    </a>
+                    <a href="pages/missions.html" class="feat-card card-shimmer" style="text-decoration:none;color:inherit;">
+                        <div class="fc-icon">🚀</div>
+                        <h3 data-i18n="home.feat3.title">探测任务 →</h3>
+                        <p data-i18n="home.feat3.desc">从旅行者号到韦伯望远镜，人类深空探测里程碑全记录，追踪正在进行的伟大征程。</p>
+                    </a>
+                    <a href="pages/knowledge.html" class="feat-card card-shimmer" style="text-decoration:none;color:inherit;">
+                        <div class="fc-icon">🎓</div>
+                        <h3 data-i18n="home.feat4.title">天文百科 →</h3>
+                        <p data-i18n="home.feat4.desc">太阳系、恒星演化、星系、宇宙学、系外行星——循序渐进的天文学知识体系。</p>
+                    </a>
+                    <a href="pages/observe.html" class="feat-card card-shimmer" style="text-decoration:none;color:inherit;">
+                        <div class="fc-icon">🔭</div>
+                        <h3 data-i18n="home.feat5.title">观测指南 →</h3>
+                        <p data-i18n="home.feat5.desc">从裸眼入门到望远镜选购，四季星空亮点、进阶观测技巧，开启你的探索之旅。</p>
+                    </a>
+                    <a href="pages/links.html" class="feat-card card-shimmer" style="text-decoration:none;color:inherit;">
+                        <div class="fc-icon">🌐</div>
+                        <h3 data-i18n="home.feat6.title">资源导航 →</h3>
+                        <p data-i18n="home.feat6.desc">精选 30+ 全球天文网站——航天机构、空间望远镜、天文媒体、观测工具与社区。</p>
+                    </a>
+                </div>
+
+                <div style="text-align:center;margin-top:36px;" class="anim-fade-up">
+                    <div class="quick-links">
+                        <a href="pages/planets.html" class="btn btn-primary" data-i18n="home.quick1">行星探索</a>
+                        <a href="pages/gallery.html" class="btn" data-i18n="home.quick2">星空画廊</a>
+                        <a href="pages/missions.html" class="btn" data-i18n="home.quick3">探测任务</a>
+                        <a href="pages/knowledge.html" class="btn" data-i18n="home.quick4">天文百科</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Tooltip -->
+    <div class="floating-tip" id="tooltip"></div>
+
+    <script src="js/i18n.js?v=2"></script>
+    <script src="js/components.js?v=2"></script>
+    <script src="js/main.js?v=2"></script>
+    <script>
+        // ---- Asteroid Belt ----
+        (function() {
+            const canvas = document.getElementById('asteroidCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let asteroids = [];
+            const N = 260;
+
+            function resize() {
+                const wrap = document.getElementById('solarWrap');
+                if (!wrap) return;
+                canvas.width = wrap.clientWidth;
+                canvas.height = wrap.clientHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            function init() {
+                asteroids = [];
+                for (let i = 0; i < N; i++) {
+                    asteroids.push({
+                        angle: Math.random() * Math.PI * 2,
+                        rFrac: 0.21 + Math.random() * 0.058,
+                        speed: 0.0003 + Math.random() * 0.0011,
+                        size: 0.4 + Math.random() * 1.7,
+                        alpha: 0.22 + Math.random() * 0.5,
+                    });
+                }
+            }
+            init();
+            window.addEventListener('resize', init);
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+                const ref = Math.min(canvas.width, canvas.height);
+                for (const a of asteroids) {
+                    a.angle += a.speed;
+                    const r = a.rFrac * ref;
+                    const x = cx + Math.cos(a.angle) * r;
+                    const y = cy + Math.sin(a.angle) * r;
+                    ctx.beginPath();
+                    ctx.arc(x, y, a.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(190,200,220,${a.alpha})`;
+                    ctx.fill();
+                }
+                requestAnimationFrame(draw);
+            }
+            draw();
+        })();
+
+        // ---- Parallax ----
+        (function() {
+            const wrap = document.getElementById('solarWrap');
+            if (!wrap) return;
+            document.addEventListener('mousemove', function(e) {
+                if (window.innerWidth < 700) return;
+                const dx = (e.clientX / window.innerWidth - 0.5) * 12;
+                const dy = (e.clientY / window.innerHeight - 0.5) * 12;
+                wrap.style.transform = `translate(${dx}px, ${dy}px)`;
+            });
+        })();
+
+        // ---- Solar Flare Particles ----
+        (function() {
+            const sun = document.querySelector('.sun');
+            if (!sun) return;
+            function emitFlare() {
+                const sunRect = sun.getBoundingClientRect();
+                const cx = sunRect.left + sunRect.width / 2;
+                const cy = sunRect.top + sunRect.height / 2;
+                for (let i = 0; i < 6; i++) {
+                    const spark = document.createElement('div');
+                    spark.className = 'spark';
+                    const angle = Math.random() * Math.PI * 2;
+                    const dist = 40 + Math.random() * 70;
+                    spark.style.cssText = `
+                        left:${cx}px;top:${cy}px;
+                        width:3px;height:3px;
+                        background:rgba(255,180,30,${0.6 + Math.random() * 0.4});
+                        box-shadow:0 0 6px rgba(255,150,0,0.7);
+                        --sx:${Math.cos(angle) * dist}px;
+                        --sy:${Math.sin(angle) * dist}px;
+                        animation-duration:${0.6 + Math.random() * 0.8}s;
+                    `;
+                    document.body.appendChild(spark);
+                    spark.addEventListener('animationend', () => spark.remove());
+                }
+            }
+            setInterval(emitFlare, 2200);
+            emitFlare();
+        })();
+
+        // ---- Planet Hover Sparks ----
+        (function() {
+            document.querySelectorAll('.planet, .sun').forEach(el => {
+                el.addEventListener('mouseenter', function(e) {
+                    const rect = el.getBoundingClientRect();
+                    const cx = rect.left + rect.width / 2;
+                    const cy = rect.top + rect.height / 2;
+                    const count = el.classList.contains('sun') ? 14 : 8;
+                    for (let i = 0; i < count; i++) {
+                        const spark = document.createElement('div');
+                        spark.className = 'spark';
+                        const angle = Math.random() * Math.PI * 2;
+                        const dist = 15 + Math.random() * 40;
+                        const hue = el.classList.contains('sun') ? '255,150,0' : '0,220,255';
+                        spark.style.cssText = `
+                            left:${cx}px;top:${cy}px;
+                            width:${1.5 + Math.random() * 2.5}px;
+                            height:${1.5 + Math.random() * 2.5}px;
+                            background:rgba(${hue},${0.5 + Math.random() * 0.5});
+                            box-shadow:0 0 8px rgba(${hue},0.6);
+                            --sx:${Math.cos(angle) * dist}px;
+                            --sy:${Math.sin(angle) * dist}px;
+                            animation-duration:${0.4 + Math.random() * 0.5}s;
+                        `;
+                        document.body.appendChild(spark);
+                        spark.addEventListener('animationend', () => spark.remove());
+                    }
+                });
+            });
+        })();
+
+        // ---- Orbit Trails (for inner planets) ----
+        (function() {
+            const trailPlanets = [
+                { orbiter: document.querySelector('.orb-mercury'), color: '180,180,180' },
+                { orbiter: document.querySelector('.orb-venus'), color: '232,200,122' },
+                { orbiter: document.querySelector('.orb-earth'), color: '74,144,226' },
+                { orbiter: document.querySelector('.orb-mars'), color: '212,92,58' },
+            ];
+
+            function spawnTrail(orbiter, color) {
+                if (!orbiter) return;
+                const planet = orbiter.querySelector('.planet');
+                if (!planet) return;
+                const wrap = document.getElementById('solarWrap');
+                if (!wrap) return;
+                const wrapRect = wrap.getBoundingClientRect();
+                const planetRect = planet.getBoundingClientRect();
+                const cx = planetRect.left + planetRect.width / 2 - wrapRect.left;
+                const cy = planetRect.top + planetRect.height / 2 - wrapRect.top;
+                const trail = document.createElement('div');
+                trail.className = 'orbit-trail';
+                trail.style.cssText = `
+                    left:${cx}px;top:${cy}px;
+                    width:${planetRect.width * 0.6}px;
+                    height:${planetRect.height * 0.6}px;
+                    background:rgba(${color},0.5);
+                    box-shadow:0 0 4px rgba(${color},0.4);
+                    animation-duration:${0.5 + Math.random() * 0.3}s;
+                `;
+                wrap.appendChild(trail);
+                trail.addEventListener('animationend', () => trail.remove());
+            }
+
+            trailPlanets.forEach(({orbiter, color}) => {
+                if (!orbiter) return;
+                let counter = 0;
+                // Use animation iteration tracking to spawn trails
+                const speed = parseFloat(getComputedStyle(orbiter).animationDuration) || 10;
+                const interval = (speed * 1000) / 12; // 12 trails per orbit
+                setInterval(() => spawnTrail(orbiter, color), Math.max(interval, 200));
+            });
+        })();
+
+        // ---- Planet Tooltips ----
+        document.addEventListener('DOMContentLoaded', function() {
+            bindTooltip('.sun, .planet');
+        });
+    </script>
+</body>
+</html>

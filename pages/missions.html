@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fly2Sun 探测任务 — 人类深空探测器追踪，从旅行者号到韦伯望远镜">
+    <title>探测任务 | Fly2Sun.eu.org</title>
+    <link rel="stylesheet" href="../css/style.css?v=2">
+    <style>
+        .mission-timeline {
+            position: relative;
+            max-width: 760px; margin: 0 auto;
+            padding-left: 32px;
+        }
+        .mission-timeline::before {
+            content: '';
+            position: absolute; left: 13px; top: 0; bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--cyan), rgba(0,200,255,0.1), var(--cyan));
+        }
+        .mission-item {
+            position: relative; margin-bottom: 32px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px 22px 22px 28px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        .mission-item:hover {
+            border-color: var(--border-h);
+            box-shadow: 0 6px 28px rgba(0,200,255,0.06);
+        }
+        .mission-item::before {
+            content: '';
+            position: absolute;
+            left: -25px; top: 28px;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: var(--cyan);
+            box-shadow: 0 0 12px var(--cyan);
+            border: 2px solid var(--bg-deep);
+        }
+        .mission-item .m-head {
+            display: flex; flex-wrap: wrap;
+            align-items: baseline; gap: 10px;
+            margin-bottom: 8px;
+        }
+        .mission-item .m-head h3 {
+            font-size: 1.2rem; letter-spacing: 0.06em;
+            color: #fff;
+        }
+        .mission-item .m-head .m-date {
+            font-size: 0.75rem; color: var(--cyan);
+            letter-spacing: 0.08em;
+            padding: 2px 10px;
+            border: 1px solid rgba(0,200,255,0.25);
+            border-radius: 12px;
+        }
+        .mission-item .m-head .m-status {
+            font-size: 0.7rem; letter-spacing: 0.06em;
+            padding: 3px 10px; border-radius: 12px;
+            font-weight: 600;
+        }
+        .status-active  { background: rgba(0,220,100,0.12); color: #4c8; border: 1px solid rgba(0,220,100,0.25); }
+        .status-ongoing { background: rgba(0,200,255,0.1); color: var(--cyan); border: 1px solid rgba(0,200,255,0.2); }
+        .status-ended   { background: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px solid rgba(255,255,255,0.08); }
+        .status-future  { background: rgba(255,200,50,0.08); color: var(--gold); border: 1px solid rgba(255,200,50,0.2); }
+
+        .mission-item p {
+            font-size: 0.88rem; color: var(--text-dim);
+            line-height: 1.7; margin-bottom: 10px;
+        }
+        .mission-item .m-stats {
+            display: flex; flex-wrap: wrap; gap: 14px;
+            font-size: 0.74rem; color: var(--text-muted);
+        }
+        .mission-item .m-stats span { letter-spacing: 0.04em; }
+
+        .mission-hero-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-h);
+            border-radius: var(--radius);
+            padding: 30px 26px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            display: flex; flex-wrap: wrap;
+            gap: 24px; align-items: center;
+        }
+        .mission-hero-card .mhc-icon {
+            font-size: 4rem; flex-shrink: 0;
+            width: 100px; text-align: center;
+        }
+        .mission-hero-card .mhc-body { flex: 1; min-width: 240px; }
+        .mission-hero-card .mhc-body h3 {
+            font-size: 1.3rem; letter-spacing: 0.08em; color: #fff;
+            margin-bottom: 8px;
+        }
+        .mission-hero-card .mhc-body p {
+            font-size: 0.88rem; color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        @media (max-width: 600px) {
+            .mission-timeline { padding-left: 24px; }
+            .mission-timeline::before { left: 9px; }
+            .mission-item::before { left: -19px; width: 10px; height: 10px; }
+            .mission-item { padding: 16px 14px 16px 18px; }
+            .mission-hero-card { padding: 20px 16px; }
+            .mission-hero-card .mhc-icon { font-size: 2.8rem; width: 60px; }
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <div class="page-wrap">
+        <div class="container section">
+            <div class="page-title anim-fade-up">
+                <h1 data-i18n="page.missions.title">探测任务</h1>
+                <p class="subtitle" data-i18n="page.missions.sub">SPACE MISSIONS</p>
+                <div class="hr"></div>
+                <p style="color:var(--text-dim);font-size:0.85rem;margin-top:10px;">
+                    <span lang="zh">人类探索宇宙的壮丽征程 · 从近地轨道到星际空间</span><span lang="en">Humanity's grand journey of exploration · from low Earth orbit to interstellar space</span>
+                </p>
+            </div>
+
+            <!-- Hero stat -->
+            <div class="mission-hero-card anim-fade-up">
+                <div class="mhc-icon">🚀</div>
+                <div class="mhc-body">
+                    <h3 data-i18n="page.missions.heroTitle">人类已向太空发射了超过 250 次探测任务</h3>
+                    <p data-i18n="page.missions.heroDesc">从 1957 年第一颗人造卫星 Sputnik 1，到 2021 年发射的詹姆斯·韦伯空间望远镜，人类的足迹已遍布太阳系的每一颗行星，探测器正朝着星际空间进发。以下是最具里程碑意义的探测任务。</p>
+                </div>
+            </div>
+
+            <!-- Timeline -->
+            <div class="mission-timeline anim-fade-up">
+
+                <!-- Sputnik -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">斯普特尼克 1 号 Sputnik 1</span><span lang="en">Sputnik 1</span></h3>
+                        <span class="m-date">1957</span>
+                        <span class="m-status status-ended"><span lang="zh">● 已结束</span><span lang="en">● Completed</span></span>
+                    </div>
+                    <p><span lang="zh">人类历史上第一颗人造地球卫星，由苏联于 1957 年 10 月 4 日发射升空。这颗直径仅 58 厘米、重 83.6 公斤的金属球体，以每 96 分钟一圈的速度绕地球运行，向地面发送简单的无线电"哔哔"信号。Sputnik 1 的发射标志着太空时代的开启，直接引发了美苏太空竞赛，催生了 NASA 的成立。</span><span lang="en">The first artificial satellite in human history, launched by the Soviet Union on October 4, 1957. This 58 cm-diameter metal sphere orbited Earth every 96 minutes, transmitting simple radio beeps heard worldwide. Its launch ignited the Space Race between the US and USSR, directly leading to the creation of NASA.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 近地轨道 215-939 km</span><span lang="en">📍 LEO 215-939 km</span>
+                        <span lang="zh">⏱️ 运行 21 天</span><span lang="en">⏱️ 21 days</span>
+                        <span lang="zh">🇷🇺 苏联</span><span lang="en">🇷🇺 Soviet Union</span>
+                        <span lang="zh">🏆 太空时代开端</span><span lang="en">🏆 Dawn of the Space Age</span>
+                    </div>
+                </div>
+
+                <!-- Apollo 11 -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">阿波罗 11 号 Apollo 11</span><span lang="en">Apollo 11</span></h3>
+                        <span class="m-date">1969</span>
+                        <span class="m-status status-ended"><span lang="zh">● 已结束</span><span lang="en">● Completed</span></span>
+                    </div>
+                    <p><span lang="zh">"这是个人的一小步，却是人类的一大步。"1969 年 7 月 20 日，尼尔·阿姆斯特朗和巴兹·奥尔德林成为首次踏上月球表面的人类。阿波罗 11 号是阿波罗计划的高光时刻——整个计划在 1969-1972 年间共 6 次成功登月，12 名宇航员在月球表面行走，带回了 382 公斤月岩样本，彻底改变了人类对地月系统的理解。</span><span lang="en">"That's one small step for man, one giant leap for mankind." On July 20, 1969, Neil Armstrong and Buzz Aldrin became the first humans to walk on the Moon. Apollo 11 was the pinnacle of the Apollo program, which achieved six successful Moon landings between 1969-1972, returning 382 kg of lunar samples.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 月球静海基地</span><span lang="en">📍 Mare Tranquillitatis</span>
+                        <span lang="zh">⏱️ 月表停留 21.5 小时</span><span lang="en">⏱️ 21.5 hrs on surface</span>
+                        <span lang="zh">🇺🇸 NASA</span><span lang="en">🇺🇸 NASA</span>
+                        <span lang="zh">👨‍🚀 人类首次登月</span><span lang="en">👨‍🚀 First Moon landing</span>
+                    </div>
+                </div>
+
+                <!-- Pioneer -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">先驱者 10 & 11 号 Pioneer 10 & 11</span><span lang="en">Pioneer 10 & 11</span></h3>
+                        <span class="m-date">1972-1973</span>
+                        <span class="m-status status-ended"><span lang="zh">● 已结束</span><span lang="en">● Completed</span></span>
+                    </div>
+                    <p><span lang="zh">人类首次穿越小行星带并飞掠木星（先驱者 10 号）和土星（先驱者 11 号）的探测器。它们拍摄了第一批木星大红斑和土星环的近距离影像，为后来的旅行者号铺平了道路。两艘探测器各携带一块"先驱者镀金铝板"——刻有地球位置和人类形象的星际名片，是人类向宇宙发出的第一封"信件"。</span><span lang="en">The first spacecraft to cross the asteroid belt and visit Jupiter (Pioneer 10) and Saturn (Pioneer 11). They captured the first close-up images of the Great Red Spot and Saturn's rings, blazing the trail for the Voyager missions. Both carry the Pioneer Plaque — a gold-anodized aluminum plate depicting Earth's location and human figures, humanity's first interstellar message.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 已飞出太阳系</span><span lang="en">📍 Beyond the Solar System</span>
+                        <span lang="zh">⏱️ 最后信号 2003 年</span><span lang="en">⏱️ Last signal 2003</span>
+                        <span lang="zh">🇺🇸 NASA</span><span lang="en">🇺🇸 NASA</span>
+                        <span lang="zh">📮 首张星际名片</span><span lang="en">📮 First interstellar message</span>
+                    </div>
+                </div>
+
+                <!-- Viking -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">维京号 Viking 1 & 2</span><span lang="en">Viking 1 & 2</span></h3>
+                        <span class="m-date">1975-1982</span>
+                        <span class="m-status status-ended"><span lang="zh">● 已结束</span><span lang="en">● Completed</span></span>
+                    </div>
+                    <p><span lang="zh">人类首次成功在火星表面着陆并开展长期科学探测的任务。维京 1 号和 2 号各由一个轨道器和一个着陆器组成，传回了第一张火星表面彩色照片，并进行了著名的"标记释放实验"——测试火星土壤中是否存在微生物代谢活动。虽然实验结果至今仍有争议，但维京号奠定了人类对火星地质和气候的基本认识。</span><span lang="en">The first successful Mars landing and long-term surface science mission. Each Viking consisted of an orbiter and a lander. They returned the first color photos from the Martian surface and conducted the famous Labeled Release experiment to test for microbial metabolic activity in Martian soil. Though the results remain debated, Viking established our fundamental understanding of Martian geology and climate.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 火星表面</span><span lang="en">📍 Mars surface</span>
+                        <span lang="zh">⏱️ 运行 6 年+</span><span lang="en">⏱️ 6+ years</span>
+                        <span lang="zh">🇺🇸 NASA</span><span lang="en">🇺🇸 NASA</span>
+                        <span lang="zh">🧪 首次火星生命实验</span><span lang="en">🧪 First Mars life experiment</span>
+                    </div>
+                </div>
+
+                <!-- Voyager -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">旅行者号 Voyager 1 & 2</span><span lang="en">Voyager 1 & 2</span></h3>
+                        <span class="m-date">1977</span>
+                        <span class="m-status status-active"><span lang="zh">● 运行中</span><span lang="en">● Active</span></span>
+                    </div>
+                    <p><span lang="zh">人类历史上最伟大的探测任务。两艘探测器先后飞掠木星、土星、天王星和海王星，传回了前所未有的高清影像。2012 年，旅行者 1 号成为第一个进入星际空间的人造物体。它们各携带一张"金唱片"，记录着地球的声音与图像，作为给外星文明的问候。至今仍在向地球发送数据。</span><span lang="en">Arguably the greatest exploration mission in human history. The twin spacecraft flew by Jupiter, Saturn, Uranus, and Neptune, returning unprecedented high-resolution images. In 2012, Voyager 1 became the first human-made object to enter interstellar space. Each carries a Golden Record — a time capsule of Earth's sounds and images, a greeting to any extraterrestrial civilization. Both still transmit data to this day.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 距地球 240+ 亿 km</span><span lang="en">📍 24+ billion km from Earth</span>
+                        <span lang="zh">⏱️ 运行 48+ 年</span><span lang="en">⏱️ 48+ years</span>
+                        <span lang="zh">🌍 NASA</span><span lang="en">🇺🇸 NASA</span>
+                        <span lang="zh">📡 星际空间</span><span lang="en">📡 Interstellar space</span>
+                    </div>
+                </div>
+
+                <!-- Galileo -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">伽利略号 Galileo</span><span lang="en">Galileo</span></h3>
+                        <span class="m-date">1989-2003</span>
+                        <span class="m-status status-ended"><span lang="zh">● 已结束</span><span lang="en">● Completed</span></span>
+                    </div>
+                    <p><span lang="zh">人类首个木星轨道探测器，在木星系统工作了 8 年，完成了 34 次绕木飞行。伽利略号发现了木卫二（欧罗巴）冰壳下存在全球性液态海洋的关键证据，观测到木卫一（伊奥）上活跃的火山喷发，并释放了一枚大气探测器直接进入木星大气层。2003 年，伽利略号以坠入木星大气的方式结束了任务——避免污染可能存在生命的木卫二。</span><span lang="en">The first Jupiter orbiter, which spent 8 years studying the Jovian system across 34 orbits. Galileo discovered compelling evidence for a global subsurface ocean on Europa, observed active volcanoes on Io, and deployed an atmospheric probe that plunged directly into Jupiter's atmosphere. The mission ended in 2003 with a deliberate plunge into Jupiter to avoid contaminating Europa.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 木星系统</span><span lang="en">📍 Jupiter system</span>
+                        <span lang="zh">⏱️ 14 年总任务期</span><span lang="en">⏱️ 14 years total</span>
+                        <span lang="zh">🇺🇸 NASA</span><span lang="en">🇺🇸 NASA</span>
+                        <span lang="zh">🌊 发现木卫二海洋</span><span lang="en">🌊 Discovered Europa's ocean</span>
+                    </div>
+                </div>
+
+                <!-- Hubble -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">哈勃空间望远镜 Hubble</span><span lang="en">Hubble Space Telescope</span></h3>
+                        <span class="m-date">1990</span>
+                        <span class="m-status status-active"><span lang="zh">● 运行中</span><span lang="en">● Active</span></span>
+                    </div>
+                    <p><span lang="zh">改变了人类对宇宙认知的革命性望远镜。在 540 公里高的轨道上运行，避开了大气层的干扰。拍摄了超过 150 万次观测，包括著名的"哈勃深场"——一个看似空无一物的天区中发现了数千个遥远星系。经历了 5 次航天飞机维修任务，至今仍是产出最高的天文设备之一。</span><span lang="en">A revolutionary telescope that transformed our understanding of the cosmos. Orbiting 540 km above Earth, it has made over 1.5 million observations, including the iconic Hubble Deep Field — revealing thousands of distant galaxies in a seemingly empty patch of sky. Serviced by five Space Shuttle missions, it remains one of the most productive scientific instruments ever built.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 低地球轨道 540 km</span><span lang="en">📍 LEO 540 km</span>
+                        <span lang="zh">🔭 2.4m 口径</span><span lang="en">🔭 2.4m aperture</span>
+                        <span lang="zh">🌍 NASA / ESA</span><span lang="en">🇺🇸 NASA / ESA</span>
+                        <span lang="zh">📸 150 万+ 次观测</span><span lang="en">📸 1.5M+ observations</span>
+                    </div>
+                </div>
+
+                <!-- Cassini -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">卡西尼-惠更斯号 Cassini-Huygens</span><span lang="en">Cassini-Huygens</span></h3>
+                        <span class="m-date">1997-2017</span>
+                        <span class="m-status status-ended"><span lang="zh">● 已结束</span><span lang="en">● Completed</span></span>
+                    </div>
+                    <p><span lang="zh">为期 20 年的土星探测任务，彻底改变了人类对土星系统的理解。发现了土卫二南极的冰喷泉——暗示着地下海洋可能存在生命。惠更斯探测器成功着陆土卫六泰坦，这是人类首次在外太阳系天体上着陆。2017 年，卡西尼号以"壮丽终章"坠入土星大气层，燃烧殆尽。</span><span lang="en">A 20-year odyssey to the Saturn system that revolutionized our understanding of the ringed planet. Cassini discovered ice geysers erupting from Enceladus's south pole — hinting at a subsurface ocean that could harbor life. The Huygens probe successfully landed on Titan, humanity's first landing in the outer Solar System. The mission ended with a dramatic "Grand Finale" plunge into Saturn's atmosphere in 2017.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 土星系统</span><span lang="en">📍 Saturn system</span>
+                        <span lang="zh">⏱️ 20 年任务期</span><span lang="en">⏱️ 20 years</span>
+                        <span lang="zh">🌍 NASA / ESA / ASI</span><span lang="en">🇺🇸 NASA / ESA / ASI</span>
+                        <span lang="zh">🪐 635 GB 科学数据</span><span lang="en">🪐 635 GB science data</span>
+                    </div>
+                </div>
+
+                <!-- Rosetta -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">罗塞塔号 Rosetta & 菲莱着陆器</span><span lang="en">Rosetta & Philae</span></h3>
+                        <span class="m-date">2004-2016</span>
+                        <span class="m-status status-ended"><span lang="zh">● 已结束</span><span lang="en">● Completed</span></span>
+                    </div>
+                    <p><span lang="zh">人类历史上首次环绕并登陆彗星的任务。罗塞塔号飞行 10 年、跨越 64 亿公里，最终与 67P/丘留莫夫-格拉西缅科彗星交会。2014 年，菲莱着陆器成功降落在彗星表面——虽然因锚定系统故障而弹跳，但仍传回了宝贵的彗星表面数据。罗塞塔号首次在彗星上检测到甘氨酸（一种氨基酸），支持了"地球生命原材料可能来自彗星"的假说。</span><span lang="en">The first mission to orbit and land on a comet. After a 10-year journey spanning 6.4 billion km, Rosetta rendezvoused with Comet 67P/Churyumov-Gerasimenko. In 2014, the Philae lander touched down on the comet's surface — the first comet landing ever achieved. Rosetta detected glycine, an amino acid, supporting the hypothesis that the building blocks of life may have been delivered to Earth by comets.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 67P 彗星</span><span lang="en">📍 Comet 67P</span>
+                        <span lang="zh">⏱️ 12 年任务期</span><span lang="en">⏱️ 12 years</span>
+                        <span lang="zh">🇪🇺 ESA</span><span lang="en">🇪🇺 ESA</span>
+                        <span lang="zh">☄️ 首次彗星着陆</span><span lang="en">☄️ First comet landing</span>
+                    </div>
+                </div>
+
+                <!-- Mars Rovers -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">火星探测车 Mars Rovers</span><span lang="en">Mars Rovers</span></h3>
+                        <span class="m-date">2004-<span lang="zh">至今</span><span lang="en">present</span></span>
+                        <span class="m-status status-active"><span lang="zh">● 运行中</span><span lang="en">● Active</span></span>
+                    </div>
+                    <p><span lang="zh">从勇气号和机遇号（原计划 90 天却运行了 14 年），到好奇号（2012 年着陆，至今仍在探索盖尔陨石坑），再到毅力号（2021 年着陆，携带了首架外星直升机机智号），火星车不断揭示火星曾拥有液态水的证据。毅力号正在收集火星样本，等待未来的返回任务带回地球。</span><span lang="en">From Spirit and Opportunity (designed for 90 days, lasted 14 years) to Curiosity (landed 2012, still exploring Gale Crater) and Perseverance (landed 2021 with the first interplanetary helicopter Ingenuity), Mars rovers have continuously revealed evidence that the Red Planet once had abundant liquid water. Perseverance is collecting samples for a future return mission to bring Martian rocks back to Earth.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 火星表面</span><span lang="en">📍 Mars surface</span>
+                        <span lang="zh">🤖 5 辆成功着陆</span><span lang="en">🤖 5 successful landings</span>
+                        <span lang="zh">🌍 NASA</span><span lang="en">🇺🇸 NASA</span>
+                        <span lang="zh">🚁 首架外星直升机</span><span lang="en">🚁 First Mars helicopter</span>
+                    </div>
+                </div>
+
+                <!-- New Horizons -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">新视野号 New Horizons</span><span lang="en">New Horizons</span></h3>
+                        <span class="m-date">2006</span>
+                        <span class="m-status status-active"><span lang="zh">● 运行中</span><span lang="en">● Active</span></span>
+                    </div>
+                    <p><span lang="zh">人类首次飞掠冥王星的探测器，2015 年传回了冥王星心脏形冰川平原的震撼影像，彻底刷新了对这颗矮行星的认知。2019 年飞掠了柯伊伯带天体"天涯海角"（Arrokoth）——人类探索过的最远天体。目前正穿越柯伊伯带，继续向星际空间前进。</span><span lang="en">The first spacecraft to fly by Pluto, returning breathtaking images of its heart-shaped glacier plains in 2015 and fundamentally reshaping our understanding of this dwarf planet. In 2019, it flew past Arrokoth (Ultima Thule), the most distant object ever explored by a spacecraft, located in the Kuiper Belt. It continues its journey toward interstellar space.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 距地球 80+ 亿 km</span><span lang="en">📍 8+ billion km from Earth</span>
+                        <span lang="zh">⏱️ 运行 19+ 年</span><span lang="en">⏱️ 19+ years</span>
+                        <span lang="zh">🌍 NASA</span><span lang="en">🇺🇸 NASA</span>
+                        <span lang="zh">🪨 首个冥王星飞掠</span><span lang="en">🪨 First Pluto flyby</span>
+                    </div>
+                </div>
+
+                <!-- Dawn -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">黎明号 Dawn</span><span lang="en">Dawn</span></h3>
+                        <span class="m-date">2007-2018</span>
+                        <span class="m-status status-ended"><span lang="zh">● 已结束</span><span lang="en">● Completed</span></span>
+                    </div>
+                    <p><span lang="zh">人类首个环绕小行星带两颗最大天体——灶神星（Vesta，2011-2012）和谷神星（Ceres，2015-2018）的探测器。黎明号首次使用离子推进器实现了"环绕-脱离-再环绕"两颗不同天体的壮举。它在谷神星表面发现了神秘的亮斑——后来被确认为盐类沉积，暗示着这颗矮行星内部可能存在液态水。</span><span lang="en">The first spacecraft to orbit two different celestial bodies beyond the Earth-Moon system, using innovative ion propulsion. Dawn studied Vesta (2011-2012) and Ceres (2015-2018), the two largest objects in the asteroid belt. It discovered mysterious bright spots on Ceres — later confirmed to be salt deposits, hinting at subsurface liquid water.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 小行星带</span><span lang="en">📍 Asteroid belt</span>
+                        <span lang="zh">⏱️ 11 年任务期</span><span lang="en">⏱️ 11 years</span>
+                        <span lang="zh">🇺🇸 NASA</span><span lang="en">🇺🇸 NASA</span>
+                        <span lang="zh">⚡ 离子推进先驱</span><span lang="en">⚡ Ion propulsion pioneer</span>
+                    </div>
+                </div>
+
+                <!-- Chang'e -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">中国嫦娥探月工程 Chang'e Program</span><span lang="en">Chang'e Lunar Program</span></h3>
+                        <span class="m-date"><span lang="zh">2007-至今</span><span lang="en">2007–present</span></span>
+                        <span class="m-status status-active"><span lang="zh">● 运行中</span><span lang="en">● Active</span></span>
+                    </div>
+                    <p><span lang="zh">中国月球探测"绕、落、回"三步走战略的完美执行。嫦娥一号和二号完成绕月测绘，嫦娥三号实现中国首次月面软着陆，嫦娥四号（2019）成为人类首个在月球背面着陆的探测器，嫦娥五号（2020）成功采样 1,731 克月壤返回地球——这是 1976 年以来人类首次带回月球样本。嫦娥六号（2024）首次从月球背面采样返回，嫦娥七号和八号计划在月球南极寻找水冰。</span><span lang="en">China's perfectly executed "orbit, land, return" lunar exploration strategy. Chang'e 1 & 2 mapped the Moon from orbit, Chang'e 3 achieved China's first soft landing, Chang'e 4 (2019) made history as the first spacecraft to land on the far side of the Moon, and Chang'e 5 (2020) returned 1,731 grams of lunar samples — the first since 1976. Chang'e 6 (2024) achieved the first far-side sample return.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 月球背面 & 正面</span><span lang="en">📍 Moon near & far side</span>
+                        <span lang="zh">🏆 首次月背着陆</span><span lang="en">🏆 First far-side landing</span>
+                        <span lang="zh">🇨🇳 CNSA</span><span lang="en">🇨🇳 CNSA</span>
+                        <span lang="zh">🪨 月球样本返回</span><span lang="en">🪨 Lunar sample return</span>
+                    </div>
+                </div>
+
+                <!-- Parker Solar Probe -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">帕克太阳探测器 Parker Solar Probe</span><span lang="en">Parker Solar Probe</span></h3>
+                        <span class="m-date">2018</span>
+                        <span class="m-status status-active"><span lang="zh">● 运行中</span><span lang="en">● Active</span></span>
+                    </div>
+                    <p><span lang="zh">人类有史以来最接近太阳的探测器，其使命是"触摸太阳"。帕克号以每秒约 192 公里的速度（人类最快航天器）多次穿过太阳日冕——温度高达百万度的太阳外层大气。它使用 11.4 厘米厚的碳复合材料隔热罩抵御 1,400°C 高温，正在解开太阳科学的两大谜题：为什么日冕比太阳表面更热？太阳风是如何加速到超音速的？</span><span lang="en">The closest-ever approach to the Sun — its mission is to "touch the Sun." Parker travels at ~192 km/s (the fastest human-made object) and repeatedly flies through the Sun's corona, where temperatures reach millions of degrees. A 11.4 cm carbon-composite heat shield protects it from 1,400°C temperatures. It is unraveling why the corona is hotter than the solar surface and how the solar wind accelerates.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 距太阳 620 万 km</span><span lang="en">📍 6.2 million km from Sun</span>
+                        <span lang="zh">🔥 穿越日冕</span><span lang="en">🔥 Flies through corona</span>
+                        <span lang="zh">🇺🇸 NASA</span><span lang="en">🇺🇸 NASA</span>
+                        <span lang="zh">⚡ 192 km/s 最快</span><span lang="en">⚡ 192 km/s fastest ever</span>
+                    </div>
+                </div>
+
+                <!-- Webb -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">詹姆斯·韦伯空间望远镜 JWST</span><span lang="en">James Webb Space Telescope</span></h3>
+                        <span class="m-date">2021</span>
+                        <span class="m-status status-active"><span lang="zh">● 运行中</span><span lang="en">● Active</span></span>
+                    </div>
+                    <p><span lang="zh">哈勃的继任者，人类有史以来最强大的空间望远镜。6.5 米镀金主镜在 L2 拉格朗日点运行，以红外波段观测宇宙，可穿透尘埃云看到恒星诞生地，并探测最早一批星系的光芒。2022 年发布的首批全彩图像惊艳全球，开启了天文学的新纪元。</span><span lang="en">Hubble's successor and the most powerful space telescope ever built. Its 6.5-meter gold-plated mirror operates at the L2 Lagrange point, observing in infrared to peer through dust clouds and detect light from the first galaxies formed after the Big Bang. Its first full-color images released in 2022 stunned the world, opening a new era in astronomy.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 L2 拉格朗日点</span><span lang="en">📍 L2 Lagrange point</span>
+                        <span lang="zh">🔭 6.5m 主镜</span><span lang="en">🔭 6.5m primary mirror</span>
+                        <span lang="zh">🌍 NASA / ESA / CSA</span><span lang="en">🇺🇸 NASA / ESA / CSA</span>
+                        <span lang="zh">💰 100 亿美元</span><span lang="en">💰 $10 billion</span>
+                    </div>
+                </div>
+
+                <!-- Tianwen -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">天问一号 & 祝融号</span><span lang="en">Tianwen-1 & Zhurong</span></h3>
+                        <span class="m-date">2020-2022</span>
+                        <span class="m-status status-ended"><span lang="zh">● 已休眠</span><span lang="en">● Dormant</span></span>
+                    </div>
+                    <p><span lang="zh">中国首次独立火星探测任务，一次完成"绕、着、巡"三大目标——轨道器环绕、着陆器着陆、巡视器（祝融号）探测。这是继美国之后第二个成功在火星表面运行巡视器的国家。祝融号在乌托邦平原探测了火星土壤成分和地质结构。</span><span lang="en">China's first independent Mars mission, achieving orbiting, landing, and roving in a single attempt — a feat never before accomplished. Zhurong explored Utopia Planitia, analyzing Martian soil composition and geological structure, making China only the second nation to successfully operate a rover on the Martian surface.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 火星乌托邦平原</span><span lang="en">📍 Utopia Planitia, Mars</span>
+                        <span lang="zh">⏱️ 运行 356 天</span><span lang="en">⏱️ 356 days active</span>
+                        <span lang="zh">🇨🇳 CNSA</span><span lang="en">🇨🇳 CNSA</span>
+                        <span lang="zh">🏆 首次即成功</span><span lang="en">🏆 First-try success</span>
+                    </div>
+                </div>
+
+                <!-- Artemis -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">阿尔忒弥斯计划 Artemis</span><span lang="en">Artemis Program</span></h3>
+                        <span class="m-date">2022-<span lang="zh">未来</span><span lang="en">future</span></span>
+                        <span class="m-status status-future"><span lang="zh">◉ 进行中</span><span lang="en">◉ In Progress</span></span>
+                    </div>
+                    <p><span lang="zh">NASA 主导的载人重返月球计划，目标是在月球南极建立可持续存在，并为未来的载人火星任务铺路。Artemis I（2022）成功完成无人绕月测试，Artemis II（计划 2025）将搭载 4 名宇航员绕月飞行，Artemis III 将实现人类时隔 50 多年再次登月。</span><span lang="en">NASA's ambitious crewed return to the Moon, aiming to establish a sustainable presence at the lunar south pole and pave the way for future crewed Mars missions. Artemis I (2022) successfully completed an uncrewed lunar flyby, Artemis II will carry four astronauts around the Moon, and Artemis III will land the first woman and next man on the lunar surface — the first Moon landing in over 50 years.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 月球南极</span><span lang="en">📍 Lunar south pole</span>
+                        <span lang="zh">🎯 载人登月</span><span lang="en">🎯 Crewed Moon landing</span>
+                        <span lang="zh">🌍 NASA / ESA / JAXA</span><span lang="en">🇺🇸 NASA / ESA / JAXA</span>
+                        <span lang="zh">👩‍🚀 首位女性登月</span><span lang="en">👩‍🚀 First woman on Moon</span>
+                    </div>
+                </div>
+
+                <!-- Chandrayaan-3 -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">月船三号 Chandrayaan-3</span><span lang="en">Chandrayaan-3</span></h3>
+                        <span class="m-date">2023</span>
+                        <span class="m-status status-active"><span lang="zh">● 运行中</span><span lang="en">● Active</span></span>
+                    </div>
+                    <p><span lang="zh">印度空间研究组织（ISRO）的历史性任务——使印度成为继美、苏、中之后第四个实现月球软着陆的国家，也是首个在月球南极附近着陆的探测器。月船三号携带的 Pragyan 巡视器在月表探测到了硫、铝、钙、铁、钛等多种元素，为月球南极地质研究提供了重要数据。整个任务仅耗资约 7,500 万美元——比大多数好莱坞太空电影还便宜。</span><span lang="en">ISRO's historic mission that made India the fourth nation to achieve a soft landing on the Moon, and the first to land near the lunar south pole. The Pragyan rover detected sulfur, aluminum, calcium, iron, and titanium in the lunar soil. The entire mission cost approximately $75 million — less than most Hollywood space movies.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 月球南极-艾特肯盆地</span><span lang="en">📍 Lunar south pole region</span>
+                        <span lang="zh">⏱️ 月面运行 14 天</span><span lang="en">⏱️ 14 days surface ops</span>
+                        <span lang="zh">🇮🇳 ISRO</span><span lang="en">🇮🇳 ISRO</span>
+                        <span lang="zh">💰 仅 7500 万美元</span><span lang="en">💰 Only $75 million</span>
+                    </div>
+                </div>
+
+                <!-- Europa Clipper -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">欧罗巴快船 Europa Clipper</span><span lang="en">Europa Clipper</span></h3>
+                        <span class="m-date">2024</span>
+                        <span class="m-status status-ongoing"><span lang="zh">◉ 航行中</span><span lang="en">◉ En Route</span></span>
+                    </div>
+                    <p><span lang="zh">NASA 史上最大的行星探测器，专为探索木卫二（欧罗巴）的宜居性而设计。欧罗巴冰壳之下隐藏着含盐液态海洋——水量可能是地球所有海洋总和的两倍。欧罗巴快船将携带 9 台科学仪器，进行约 50 次近距离飞掠，探测冰壳厚度、海洋深度和化学成分，甚至可能飞越冰喷泉羽流直接采样——寻找外星生命迹象。</span><span lang="en">NASA's largest-ever planetary spacecraft, designed to investigate the habitability of Jupiter's moon Europa. Beneath its icy crust lies a saltwater ocean with potentially twice the water volume of all Earth's oceans combined. Europa Clipper will perform ~50 close flybys carrying 9 science instruments to measure ice shell thickness, ocean depth, and chemistry — and may even fly through water vapor plumes to sample them directly.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 木卫二轨道（2030 抵达）</span><span lang="en">📍 Europa (arriving 2030)</span>
+                        <span lang="zh">🔭 9 台科学仪器</span><span lang="en">🔭 9 science instruments</span>
+                        <span lang="zh">🇺🇸 NASA</span><span lang="en">🇺🇸 NASA</span>
+                        <span lang="zh">🧬 寻找外星生命</span><span lang="en">🧬 Searching for alien life</span>
+                    </div>
+                </div>
+
+                <!-- JUICE -->
+                <div class="mission-item">
+                    <div class="m-head">
+                        <h3><span lang="zh">木星冰月探测器 JUICE</span><span lang="en">JUICE (Jupiter Icy Moons Explorer)</span></h3>
+                        <span class="m-date">2023</span>
+                        <span class="m-status status-ongoing"><span lang="zh">◉ 航行中</span><span lang="en">◉ En Route</span></span>
+                    </div>
+                    <p><span lang="zh">ESA 的旗舰级木星探测任务——木星冰卫星探测器（JUpiter ICy moons Explorer）。JUICE 将于 2031 年抵达木星系统，重点研究三颗冰卫星：木卫三（太阳系最大的卫星，拥有自身磁场）、木卫二和木卫四。最终阶段将进入木卫三轨道——这将是人类探测器首次环绕地球以外的卫星飞行。目标：评估这些冰卫星的宜居潜力。</span><span lang="en">ESA's flagship mission to the Jupiter system, targeting three icy moons: Ganymede (the largest moon in the Solar System, with its own magnetic field), Europa, and Callisto. Arriving in 2031, JUICE will ultimately enter orbit around Ganymede — the first time a spacecraft has orbited a moon other than Earth's.</span></p>
+                    <div class="m-stats">
+                        <span lang="zh">📍 飞往木星途中</span><span lang="en">📍 En route to Jupiter</span>
+                        <span lang="zh">🛰️ 2031 年抵达</span><span lang="en">🛰️ Arriving 2031</span>
+                        <span lang="zh">🇪🇺 ESA</span><span lang="en">🇪🇺 ESA</span>
+                        <span lang="zh">🌕 首次绕卫星轨道</span><span lang="en">🌕 First moon orbit (non-Earth)</span>
+                    </div>
+                </div>
+
+            </div><!-- /timeline -->
+
+        </div>
+    </div>
+
+
+    <script src="../js/i18n.js?v=2"></script>
+    <script src="../js/components.js?v=2"></script>
+    <script src="../js/main.js?v=2"></script>
+</body>
+</html>
